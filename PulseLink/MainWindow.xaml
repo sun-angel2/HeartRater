@@ -70,8 +70,8 @@
             </Setter>
         </Style>
 
-        <!-- Window Control Button Style -->
-        <Style x:Key="WindowControlButton" TargetType="Button">
+        <!-- Window Symbol Button Style -->
+        <Style x:Key="WindowSymbolButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#FFAAAAAA"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -99,6 +99,11 @@
             </Setter>
         </Style>
 
+        <!-- Window Language Button Style -->
+        <Style x:Key="WindowLanguageButton" TargetType="Button" BasedOn="{StaticResource WindowSymbolButton}">
+            <Setter Property="FontFamily" Value="{x:Null}"/> <!-- Remove Marlett font -->
+        </Style>
+
         <!-- Converters -->
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"  />
@@ -119,11 +124,11 @@
                        FontWeight="SemiBold"/>
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                <Button Content="中" Style="{StaticResource WindowControlButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="zh-CN"/>
-                <Button Content="EN" Style="{StaticResource WindowControlButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
-                <Button x:Name="PART_Minimize" Content="0" Style="{StaticResource WindowControlButton}" Click="Minimize_Click"/>
-                <Button x:Name="PART_Tray" Content="1" Style="{StaticResource WindowControlButton}" Click="Tray_Click"/>
-                <Button x:Name="PART_Close" Content="r" Style="{StaticResource WindowControlButton}" Click="Close_Click"/>
+                <Button Content="中" Style="{StaticResource WindowLanguageButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="zh-CN"/>
+                <Button Content="EN" Style="{StaticResource WindowLanguageButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
+                <Button x:Name="PART_Minimize" Content="0" Style="{StaticResource WindowSymbolButton}" Click="Minimize_Click"/>
+                <Button x:Name="PART_Tray" Content="1" Style="{StaticResource WindowSymbolButton}" Click="Tray_Click"/>
+                <Button x:Name="PART_Close" Content="r" Style="{StaticResource WindowSymbolButton}" Click="Close_Click"/>
             </StackPanel>
         </DockPanel>
 

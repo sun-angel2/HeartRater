@@ -14,6 +14,44 @@ public partial class App : Application
     {
         Startup += OnStartup;
         Exit += OnExit;
+
+        // Add global exception handling
+        this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+    }
+
+    private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+    {
+        LogUnhandledException(e.Exception, "UI Thread Exception");
+        e.Handled = true; // Mark the exception as handled to prevent the application from crashing
+        MessageBox.Show("发生了一个未处理的UI错误，应用程序将尝试继续运行。", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+
+    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        LogUnhandledException(e.ExceptionObject as Exception, "Non-UI Thread Exception");
+        MessageBox.Show("发生了一个未处理的错误，应用程序将退出。", "致命错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        Environment.Exit(1); // Exit the application for non-UI thread unhandled exceptions
+    }
+
+    private void LogUnhandledException(Exception? exception, string type)
+    {
+        try
+        {
+            var logPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error.log");
+            System.IO.File.AppendAllText(logPath,
+                $"{DateTime.Now}: {type}\n" +
+                $"Message: {exception?.Message}\n" +
+                $"Source: {exception?.Source}\n" +
+                $"Stack Trace: {exception?.StackTrace}\n" +
+                $"Target Site: {exception?.TargetSite}\n" +
+                $"Inner Exception: {exception?.InnerException?.Message}\n\n");
+        }
+        catch (Exception ex)
+        {
+            // If logging fails, at least try to show a message box
+            MessageBox.Show($"无法写入错误日志: {ex.Message}\n原始错误: {exception?.Message}", "日志错误", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private void OnStartup(object sender, StartupEventArgs e)
@@ -24,7 +62,11 @@ public partial class App : Application
         serviceCollection.AddSingleton<IBluetoothService, BluetoothService>();
         serviceCollection.AddSingleton<StreamService>();
         serviceCollection.AddSingleton<LocalizationService>();
-        serviceCollection.AddSingleton<HttpServerService>(); // Add the new service
+        serviceCollection.AddSingleton(provider =>
+        {
+            var mainViewModel = provider.GetRequiredService<MainViewModel>();
+            return new HttpServerService(() => mainViewModel.Bpm);
+        });
 
         // 2. Register ViewModels
         serviceCollection.AddSingleton<MainViewModel>();
@@ -40,9 +82,18 @@ public partial class App : Application
         var observableStrings = _serviceProvider.GetRequiredService<ObservableStrings>();
         locService.LanguageChanged += observableStrings.Refresh;
 
-        // 5. Start HTTP Server
-        var httpServer = _serviceProvider.GetRequiredService<HttpServerService>();
-        httpServer.Start();
+        // 5. Start HTTP Server (now independent of MainViewModel)
+        try
+        {
+            var httpServer = _serviceProvider.GetRequiredService<HttpServerService>();
+            httpServer.Start();
+        }
+        catch (Exception ex)
+        {
+            LogUnhandledException(ex, "HttpServerService Startup Error");
+            // Optionally, inform the user that the HTTP server failed to start
+            // MessageBox.Show($"HTTP Server failed to start: {ex.Message}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
 
         // 6. Launch Main Window
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();

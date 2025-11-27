@@ -11,16 +11,17 @@ namespace PulseLink.Services;
 public class HttpServerService : IDisposable
 {
     private readonly HttpListener _listener = new();
-    private readonly MainViewModel _viewModel;
+    private readonly Func<int> _getBpmFunc;
     private readonly CancellationTokenSource _cts = new();
 
     public string ServerUrl { get; }
 
-    public HttpServerService(MainViewModel viewModel)
+    public HttpServerService(Func<int> getBpmFunc)
     {
-        _viewModel = viewModel;
+        _getBpmFunc = getBpmFunc;
         ServerUrl = Config.HttpServerBaseUrl;
-        _listener.Prefixes.Add(ServerUrl);
+        _listener.Prefixes.Add(ServerUrl); // Uses the updated Config.HttpServerBaseUrl (with new port)
+        _listener.Prefixes.Add($"http://127.0.0.1:{Config.HttpServerPort}/");
     }
 
     public void Start()
@@ -78,7 +79,7 @@ public class HttpServerService : IDisposable
 
     private async Task HandleApiRequest(HttpListenerResponse response)
     {
-        var payload = JsonSerializer.Serialize(new { bpm = _viewModel.Bpm });
+        var payload = JsonSerializer.Serialize(new { bpm = _getBpmFunc() });
         var buffer = Encoding.UTF8.GetBytes(payload);
         response.ContentType = "application/json";
         response.ContentLength64 = buffer.Length;

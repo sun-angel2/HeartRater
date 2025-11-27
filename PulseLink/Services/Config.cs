@@ -3,7 +3,7 @@ namespace PulseLink.Services;
 public static class Config
 {
     // HTTP Server for IPv6 Direct Access
-    public const int HttpServerPort = 8999;
+    public const int HttpServerPort = 8998;
     public const string HttpServerBaseUrl = "http://[::]:8999/"; // Direct string literal
 
     // MQTT Broker for Web Sharing (GitHub Pages)

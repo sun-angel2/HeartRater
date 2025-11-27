@@ -41,7 +41,7 @@ public partial class MainViewModel : ObservableObject
 
     public ObservableCollection<DeviceDisplay> Devices { get; } = new();
 
-    public MainViewModel(IBluetoothService ble, HttpServerService httpServer, LocalizationService loc, StreamService streamService)
+    public MainViewModel(IBluetoothService ble, LocalizationService loc, StreamService streamService)
     {
         _ble = ble;
         _loc = loc;
@@ -56,7 +56,7 @@ public partial class MainViewModel : ObservableObject
             _ = _streamService.SendBpmAsync(val);
         };
 
-        SetLocalServerUrl(httpServer.ServerUrl);
+        SetLocalServerUrl(Config.HttpServerBaseUrl);
         MqttStreamUrl = _streamService.StreamUrl;
         _ = _streamService.StartAsync();
 
