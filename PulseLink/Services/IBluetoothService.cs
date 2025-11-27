@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace PulseLink.Services;
 
-public interface IBluetoothService
+public interface IBluetoothService : IDisposable
 {
     event Action<int> HeartRateUpdated;
     event Action<string> StatusChanged;
