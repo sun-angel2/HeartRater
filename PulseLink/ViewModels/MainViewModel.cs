@@ -4,6 +4,7 @@ using PulseLink.Resources;
 using PulseLink.Services;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -37,6 +38,9 @@ public partial class MainViewModel : ObservableObject
     private string mqttStreamUrl = "Initializing stream...";
 
     [ObservableProperty]
+    private string userId = "Generating..."; // New property for UserId
+
+    [ObservableProperty]
     private bool isConnected = false; // Tracks Bluetooth connection status
 
     public ObservableCollection<DeviceDisplay> Devices { get; } = new();
@@ -56,17 +60,35 @@ public partial class MainViewModel : ObservableObject
             _ = _streamService.SendBpmAsync(val);
         };
 
+        // Subscribe to StreamService's PropertyChanged event
+        _streamService.PropertyChanged += StreamService_PropertyChanged;
+
         SetLocalServerUrl(Config.HttpServerBaseUrl);
+        // Initialize MqttStreamUrl and UserId from StreamService
         MqttStreamUrl = _streamService.StreamUrl;
+        UserId = _streamService.UserId;
+
         _ = _streamService.StartAsync();
 
         // Start initial scan immediately, no auto-connect
-        ScanCommand.Execute(null);
+        _ = ScanCommand.ExecuteAsync(null);
     }
 
-    private async void HandleStatusChange(string msg)
+    private void StreamService_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        Application.Current.Dispatcher.Invoke(async () =>
+        if (e.PropertyName == nameof(StreamService.StreamUrl))
+        {
+            MqttStreamUrl = _streamService.StreamUrl;
+        }
+        if (e.PropertyName == nameof(StreamService.UserId))
+        {
+            UserId = _streamService.UserId;
+        }
+    }
+
+    private void HandleStatusChange(string msg)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
         {
             if (msg.StartsWith("DISCOVERED:"))
             {
