@@ -20,7 +20,7 @@ public class HttpServerService : IDisposable
     {
         _getBpmFunc = getBpmFunc;
         ServerUrl = Config.HttpServerBaseUrl;
-        _listener.Prefixes.Add(ServerUrl); // Uses the updated Config.HttpServerBaseUrl (with new port)
+
         _listener.Prefixes.Add($"http://127.0.0.1:{Config.HttpServerPort}/");
     }
 

@@ -101,7 +101,7 @@
 
         <!-- Window Language Button Style -->
         <Style x:Key="WindowLanguageButton" TargetType="Button" BasedOn="{StaticResource WindowSymbolButton}">
-            <Setter Property="FontFamily" Value="{x:Null}"/> <!-- Remove Marlett font -->
+
         </Style>
 
         <!-- Converters -->

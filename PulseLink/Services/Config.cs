@@ -4,7 +4,7 @@ public static class Config
 {
     // HTTP Server for IPv6 Direct Access
     public const int HttpServerPort = 8998;
-    public const string HttpServerBaseUrl = "http://[::]:8999/"; // Direct string literal
+    public static readonly string HttpServerBaseUrl = $"http://[::]:{HttpServerPort}/";
 
     // MQTT Broker for Web Sharing (GitHub Pages)
     public const string MqttBrokerHost = "broker.emqx.io";

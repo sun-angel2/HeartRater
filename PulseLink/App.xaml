@@ -1,8 +1,7 @@
 <Application x:Class="PulseLink.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:viewModels="clr-namespace:PulseLink.ViewModels"
-             Startup="OnStartup">
+             xmlns:viewModels="clr-namespace:PulseLink.ViewModels">
     <Application.Resources>
         <viewModels:ObservableStrings x:Key="LocalizedStrings"/>
         
