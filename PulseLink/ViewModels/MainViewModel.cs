@@ -60,27 +60,8 @@ public partial class MainViewModel : ObservableObject
         MqttStreamUrl = _streamService.StreamUrl;
         _ = _streamService.StartAsync();
 
-        // Start initial scan and attempt auto-connect
-        StartScanAndAutoConnect();
-    }
-
-    private async void StartScanAndAutoConnect()
-    {
-        Devices.Clear();
-        _ble.StartScan();
-        Status = Strings.Status_Scanning;
-
-        await Task.Delay(TimeSpan.FromSeconds(5)); // Wait for devices to be discovered
-
-        // Attempt to auto-connect to the first discovered device
-        if (!IsConnected && Devices.Any())
-        {
-            await ConnectCommand.ExecuteAsync(Devices.First().Id);
-        }
-        else if (!Devices.Any())
-        {
-            Status = Strings.Status_Error_DeviceNotFound; // No devices found after initial scan
-        }
+        // Start initial scan immediately, no auto-connect
+        ScanCommand.Execute(null);
     }
 
     private async void HandleStatusChange(string msg)
@@ -164,15 +145,15 @@ public partial class MainViewModel : ObservableObject
         _ble.StartScan();
         Status = Strings.Status_Scanning;
 
-        // Auto-connect attempt after manual scan
+        // Give some time for devices to be discovered, then update status if none found
         await Task.Delay(TimeSpan.FromSeconds(5)); 
-        if (!IsConnected && Devices.Any())
-        {
-            await ConnectCommand.ExecuteAsync(Devices.First().Id);
-        }
-        else if (!Devices.Any())
+        if (!Devices.Any())
         {
             Status = Strings.Status_Error_DeviceNotFound;
+        }
+        else if(!IsConnected)
+        {
+            Status = "请选择一个设备..."; // Please select a device...
         }
     }
 
