@@ -49,9 +49,32 @@ public partial class App : Application
         mainWindow.Show();
     }
 
-    private void OnExit(object sender, ExitEventArgs e)
-    {
-        // Ensure services are disposed on exit
-        _serviceProvider?.GetService<HttpServerService>()?.Dispose();
+        private void OnExit(object sender, ExitEventArgs e)
+
+        {
+
+            // Ensure all disposable services are disposed on exit
+
+            if (_serviceProvider is IDisposable disposable)
+
+            {
+
+                disposable.Dispose();
+
+            }
+
+            else
+
+            {
+
+                _serviceProvider?.GetService<HttpServerService>()?.Dispose();
+
+                _serviceProvider?.GetService<IBluetoothService>()?.Dispose();
+
+                _serviceProvider?.GetService<StreamService>()?.Dispose();
+
+            }
+
+        }
+
     }
-}

@@ -19,8 +19,7 @@ public class HttpServerService : IDisposable
     public HttpServerService(MainViewModel viewModel)
     {
         _viewModel = viewModel;
-        // Listen on all IPv6 addresses on port 8999
-        ServerUrl = "http://[::]:8999/";
+        ServerUrl = Config.HttpServerBaseUrl;
         _listener.Prefixes.Add(ServerUrl);
     }
 
@@ -44,9 +43,9 @@ public class HttpServerService : IDisposable
                 // Listener was stopped, exit loop
                 break;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Log other exceptions if needed
+                Console.Error.WriteLine($"HttpServerService: Error in ListenLoop: {ex.Message}");
             }
         }
     }
@@ -67,9 +66,9 @@ public class HttpServerService : IDisposable
                 await HandlePageRequest(response);
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // ignored
+            Console.Error.WriteLine($"HttpServerService: Error processing request: {ex.Message}");
         }
         finally
         {

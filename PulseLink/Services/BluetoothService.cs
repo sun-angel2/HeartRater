@@ -7,14 +7,30 @@ using Windows.Devices.Enumeration;
 
 namespace PulseLink.Services;
 
-public class BluetoothService : IBluetoothService
+public class BluetoothService : IBluetoothService, IDisposable
 {
     private DeviceWatcher? _watcher;
+    private BluetoothLEDevice? _connectedDevice;
+    private GattCharacteristic? _heartRateCharacteristic;
+    
     public event Action<int>? HeartRateUpdated;
     public event Action<string>? StatusChanged;
 
     public void StartScan()
     {
+        // Ensure any previous connection is cleared
+        _ = DisconnectAsync();
+
+        // Stop previous watcher if active
+        if (_watcher != null)
+        {
+            if (_watcher.Status == DeviceWatcherStatus.Started || _watcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+            {
+                _watcher.Stop();
+            }
+            _watcher = null;
+        }
+
         // Request specific properties to identify BLE devices
         string[] props = { "System.Devices.Aep.DeviceAddress", "System.Devices.Aep.IsConnected" };
         
@@ -38,10 +54,8 @@ public class BluetoothService : IBluetoothService
 
     public async Task ConnectAsync(string deviceId)
     {
-        if (_watcher != null)
-        {
-            _watcher.Stop();
-        }
+        // Disconnect any existing device first
+        await DisconnectAsync();
         
         StatusChanged?.Invoke(Strings.Status_Connecting);
         
@@ -53,6 +67,13 @@ public class BluetoothService : IBluetoothService
                 StatusChanged?.Invoke(Strings.Status_Error_DeviceNotFound);
                 return;
             }
+            _connectedDevice = device;
+            _connectedDevice.ConnectionStatusChanged += (s, e) => {
+                if (s.ConnectionStatus == BluetoothConnectionStatus.Disconnected)
+                {
+                    _ = DisconnectAsync();
+                }
+            };
 
             // Get Heart Rate Service (UUID 0x180D)
             var services = await device.GetGattServicesForUuidAsync(GattServiceUuids.HeartRate);
@@ -63,16 +84,10 @@ public class BluetoothService : IBluetoothService
                 if (charResult.Characteristics.Count > 0 && charResult.Status == GattCommunicationStatus.Success)
                 {
                     var characteristic = charResult.Characteristics[0];
-                    
+                    _heartRateCharacteristic = characteristic;
+
                     // Subscribe to notifications
-                    characteristic.ValueChanged += (s, args) =>
-                    {
-                        var reader = Windows.Storage.Streams.DataReader.FromBuffer(args.CharacteristicValue);
-                        byte flags = reader.ReadByte();
-                        // Check flag bit 0: 0 = UINT8, 1 = UINT16
-                        int bpm = (flags & 1) == 0 ? reader.ReadByte() : reader.ReadUInt16();
-                        HeartRateUpdated?.Invoke(bpm);
-                    };
+                    characteristic.ValueChanged += Characteristic_ValueChanged;
                     
                     await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
                     StatusChanged?.Invoke(Strings.Status_Connected);
@@ -91,5 +106,49 @@ public class BluetoothService : IBluetoothService
         {
             StatusChanged?.Invoke(string.Format(Strings.Status_Error_Exception, ex.Message));
         }
+    }
+
+    public async Task DisconnectAsync()
+    {
+        if (_watcher != null)
+        {
+            if (_watcher.Status == DeviceWatcherStatus.Started || _watcher.Status == DeviceWatcherStatus.EnumerationCompleted)
+            {
+                _watcher.Stop();
+            }
+            _watcher = null;
+        }
+
+        if (_heartRateCharacteristic != null)
+        {
+            _heartRateCharacteristic.ValueChanged -= Characteristic_ValueChanged;
+            try
+            {
+                await _heartRateCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.None);
+            }
+            catch (Exception) { /* Ignore */ }
+            _heartRateCharacteristic = null;
+        }
+
+        if (_connectedDevice != null)
+        {
+            _connectedDevice.Dispose();
+            _connectedDevice = null;
+        }
+
+        StatusChanged?.Invoke(Strings.Status_Ready);
+    }
+
+    private void Characteristic_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
+    {
+        var reader = Windows.Storage.Streams.DataReader.FromBuffer(args.CharacteristicValue);
+        byte flags = reader.ReadByte();
+        int bpm = (flags & 1) == 0 ? reader.ReadByte() : reader.ReadUInt16();
+        HeartRateUpdated?.Invoke(bpm);
+    }
+
+    public void Dispose()
+    {
+        _ = DisconnectAsync();
     }
 }

@@ -9,4 +9,5 @@ public interface IBluetoothService
     event Action<string> StatusChanged;
     void StartScan();
     Task ConnectAsync(string deviceId);
+    Task DisconnectAsync();
 }

@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:PulseLink.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel, IsDesignTimeCreatable=True}"
         Title="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.App_Title}"
-        Height="320" Width="260"
+        Height="450" Width="280"
         Background="{StaticResource GlassBg}" 
         WindowStyle="None" 
         AllowsTransparency="True"
@@ -97,6 +98,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Converters -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"  />
     </Window.Resources>
 
     <Grid>
@@ -124,7 +129,13 @@
 
         <!-- Main Content -->
         <Grid Grid.Row="1">
-            <StackPanel VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" VerticalAlignment="Center">
                 <TextBlock Text="{Binding Bpm}" 
                            Foreground="{StaticResource NeonGreen}" 
                            FontSize="90" 
@@ -139,7 +150,46 @@
                 <TextBlock Text="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Label_Bpm}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Opacity="0.6" Margin="0,-15,0,20"/>
 
                 <TextBlock Text="{Binding Status}" Foreground="Gray" HorizontalAlignment="Center" FontSize="12" FontFamily="Consolas" Margin="10,0,10,20" TextWrapping="Wrap"/>
+            </StackPanel>
 
+            <!-- Device List / Connection Controls -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                <!-- Device List -->
+                <ListBox ItemsSource="{Binding Devices}"
+                         Visibility="{Binding IsConnected, Converter={StaticResource InvertBooleanToVisibilityConverter}}"
+                         Height="120" 
+                         Margin="0,10"
+                         Background="Transparent" 
+                         BorderThickness="0" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Name}" 
+                                    Command="{Binding DataContext.ConnectCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                    CommandParameter="{Binding Id}" 
+                                    Style="{StaticResource JellyButton}"
+                                    Width="180"
+                                    Margin="0,4"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- Connection Buttons -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+                    <Button Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_Scan}"
+                            Command="{Binding ScanCommand}"
+                            Style="{StaticResource JellyButton}"
+                            Margin="5,0"/>
+                    <Button Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_Disconnect}"
+                            Command="{Binding DisconnectCommand}"
+                            Style="{StaticResource JellyButton}"
+                            Margin="5,0"
+                            Visibility="{Binding IsConnected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Ghost Mode and URLs -->
+            <StackPanel Grid.Row="2" Margin="0,20,0,0">
                 <Button Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_ToggleGhost}" 
                         Command="{Binding ToggleGhostModeCommand}"
                         Style="{StaticResource JellyButton}"
@@ -151,6 +201,16 @@
                          BorderThickness="0" 
                          FontSize="10" 
                          Margin="0,15,0,0" 
+                         IsReadOnly="True"
+                         TextAlignment="Center"
+                         FontFamily="Consolas"/>
+                
+                <TextBox Text="{Binding MqttStreamUrl}" 
+                         Background="Transparent" 
+                         Foreground="#777"
+                         BorderThickness="0" 
+                         FontSize="10" 
+                         Margin="0,5,0,0" 
                          IsReadOnly="True"
                          TextAlignment="Center"
                          FontFamily="Consolas"/>
