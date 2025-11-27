@@ -1,4 +1,3 @@
-```markdown
 # ❤️ iQOO Watch GT 心率助手 (HeartRate Monitor)
 
 一个轻量级的开源工具，用于在 Windows 电脑、手机和网页上实时显示 iQOO Watch GT (或其他标准蓝牙心率设备) 的心率数据。
@@ -84,4 +83,3 @@ python hr.py
 ## 📄 许可证
 
 本项目基于 MIT License 开源。
-```
