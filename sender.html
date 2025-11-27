@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心率上传端</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            margin: 0 0 20px 0;
+            color: #333;
+        }
+
+        button {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:disabled {
+            background: #ccc;
+        }
+
+        .status {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .value {
+            font-size: 40px;
+            font-weight: bold;
+            color: #007AFF;
+            margin: 20px 0;
+        }
+
+        .tips {
+            color: #999;
+            font-size: 12px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>⌚ 心率采集器</h2>
+        <div class="value" id="bpm">--</div>
+        <button id="btn" onclick="connectWatch()">连接 iQOO Watch</button>
+        <div class="status" id="log">准备就绪</div>
+    </div>
+    <div class="tips">⚠️ 请保持手机屏幕常亮<br>⚠️ 必须使用 Chrome 浏览器</div>
+
+    <script>
+        // --- 核心配置 ---
+        const BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        // 为了确保唯一性，建议修改 topic，例如加上你的名字拼音
+        const TOPIC = 'iqoo_watch_share/hr_data';
+
+        let client = mqtt.connect(BROKER);
+        let logElem = document.getElementById('log');
+
+        client.on('connect', () => logElem.innerText = "服务器已连接，请连接手表...");
+
+        async function connectWatch() {
+            try {
+                logElem.innerText = "正在搜索蓝牙...";
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [{ namePrefix: 'iQOO' }, { namePrefix: 'Watch' }],
+                    optionalServices: ['heart_rate']
+                });
+
+                logElem.innerText = "正在连接蓝牙...";
+                const server = await device.gatt.connect();
+                const service = await server.getPrimaryService('heart_rate');
+                const char = await service.getCharacteristic('heart_rate_measurement');
+
+                await char.startNotifications();
+                logElem.innerText = "正在上传数据...";
+                document.getElementById('btn').innerText = "正在运行中";
+                document.getElementById('btn').disabled = true;
+                document.getElementById('btn').style.background = "#2ECC71";
+
+                char.addEventListener('characteristicvaluechanged', (e) => {
+                    const val = e.target.value;
+                    const flags = val.getUint8(0);
+                    // 解析心率
+                    const hr = (flags & 0x01) ? val.getUint16(1, true) : val.getUint8(1);
+
+                    // 更新界面
+                    document.getElementById('bpm').innerText = hr;
+
+                    // 上传数据
+                    if (client.connected) {
+                        client.publish(TOPIC, JSON.stringify({ hr: hr }));
+                    }
+                });
+
+                device.addEventListener('gattserverdisconnected', () => {
+                    alert("手表断开，请刷新页面重连");
+                    location.reload();
+                });
+
+            } catch (err) {
+                alert("连接失败: " + err);
+                logElem.innerText = "连接取消或失败";
+            }
+        }
+    </script>
+</body>
+
+</html>

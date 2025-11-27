@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时心率看板</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        /* 复刻 Python customtkinter 的样式 */
+        body {
+            /* 对应 self.wm_attributes("-transparentcolor", "#000001") 的背景逻辑，
+               网页这里直接用黑色，如果OBS推流可以用滤镜滤掉黑色 */
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Segoe UI", sans-serif;
+            /* 对应 font=("Segoe UI") */
+            overflow: hidden;
+        }
+
+        /* 对应 self.display_frame */
+        .display-frame {
+            display: flex;
+            align-items: center;
+            /* 垂直居中 */
+            justify-content: center;
+            background-color: #000000;
+            padding: 5px 10px;
+            /* 对应 pady=5, padx=10 */
+        }
+
+        /* 对应 self.label_hr */
+        .label-hr {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 60px;
+            /* 对应 size=60 */
+            font-weight: bold;
+            /* 对应 bold */
+            color: #2ECC71;
+            /* 对应 text_color="green" (Python的green通常偏亮，这里用标准Hex) */
+            margin-right: 5px;
+            /* 对应 padx=(0, 5) */
+            min-width: 100px;
+            /* 防止数字跳动导致布局抖动 */
+            text-align: right;
+        }
+
+        /* 对应 self.label_heart */
+        .label-heart {
+            font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+            font-size: 40px;
+            /* 对应 size=40 */
+            color: red;
+            /* 对应 text_color="red" */
+            margin-left: 5px;
+            /* 简单的居中对齐微调 */
+            padding-top: 5px;
+        }
+
+        /* 对应 _animate_heart 动画效果 */
+        .beat {
+            animation: heartbeat 0.4s ease-in-out;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(1.3);
+            }
+
+            /* 模拟心跳放大的效果 */
+            60% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 离线状态样式 */
+        .offline {
+            color: grey !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="display-frame">
+        <!-- 心率数值 -->
+        <div id="hr-value" class="label-hr offline">---</div>
+        <!-- 心形图标 -->
+        <div id="heart-icon" class="label-heart offline">❤️</div>
+    </div>
+
+    <script>
+        // --- 必须与 sender.html 中的配置完全一致 ---
+        const BROKER = 'wss://broker.emqx.io:8084/mqtt';
+        const TOPIC = 'iqoo_watch_share/hr_data';
+
+        const hrLabel = document.getElementById('hr-value');
+        const heartIcon = document.getElementById('heart-icon');
+        let client = mqtt.connect(BROKER);
+
+        client.on('connect', () => {
+            console.log("已连接服务器");
+            client.subscribe(TOPIC);
+        });
+
+        client.on('message', (topic, msg) => {
+            try {
+                const data = JSON.parse(msg.toString());
+                const hr = data.hr;
+
+                if (hr > 0) {
+                    // 在线状态：绿色数字，红色心心
+                    hrLabel.innerText = hr;
+                    hrLabel.classList.remove('offline');
+                    heartIcon.classList.remove('offline');
+
+                    // 触发心跳动画 (移除再添加class以重接触发)
+                    heartIcon.classList.remove('beat');
+                    void heartIcon.offsetWidth; // 强制重绘
+                    heartIcon.classList.add('beat');
+                } else {
+                    setOffline();
+                }
+            } catch (e) { }
+        });
+
+        function setOffline() {
+            hrLabel.innerText = "---";
+            hrLabel.classList.add('offline');
+            heartIcon.classList.add('offline');
+            heartIcon.classList.remove('beat');
+        }
+    </script>
+</body>
+
+</html>
