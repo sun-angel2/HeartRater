@@ -17,16 +17,25 @@ public partial class App : Application
         // 1. Register Services
         serviceCollection.AddSingleton<IBluetoothService, BluetoothService>();
         serviceCollection.AddSingleton<StreamService>();
+        serviceCollection.AddSingleton<LocalizationService>();
 
         // 2. Register ViewModels
         serviceCollection.AddSingleton<MainViewModel>();
+        serviceCollection.AddSingleton(provider => (ObservableStrings)Current.Resources["LocalizedStrings"]);
+
 
         // 3. Register Views
         serviceCollection.AddSingleton<MainWindow>();
 
         _serviceProvider = serviceCollection.BuildServiceProvider();
+        
+        // 4. Connect services
+        var locService = _serviceProvider.GetRequiredService<LocalizationService>();
+        var observableStrings = _serviceProvider.GetRequiredService<ObservableStrings>();
+        locService.LanguageChanged += observableStrings.Refresh;
 
-        // 4. Launch Main Window
+
+        // 5. Launch Main Window
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
     }

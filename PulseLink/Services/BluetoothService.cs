@@ -1,3 +1,4 @@
+using PulseLink.Resources;
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -19,7 +20,7 @@ public class BluetoothService : IBluetoothService
         
         // Filter for devices that support Bluetooth LE
         _watcher = DeviceInformation.CreateWatcher(
-            "(System.Devices.Aep.ProtocolId:\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")", 
+            "(System.Devices.Aep.ProtocolId:=\"{bb7bb05e-5972-42b5-94fc-76eaa7084d49}\")", 
             props, 
             DeviceInformationKind.AssociationEndpoint);
         
@@ -32,7 +33,7 @@ public class BluetoothService : IBluetoothService
         };
         
         _watcher.Start();
-        StatusChanged?.Invoke("正在扫描...");
+        StatusChanged?.Invoke(Strings.Status_Scanning);
     }
 
     public async Task ConnectAsync(string deviceId)
@@ -42,24 +43,24 @@ public class BluetoothService : IBluetoothService
             _watcher.Stop();
         }
         
-        StatusChanged?.Invoke("正在连接...");
+        StatusChanged?.Invoke(Strings.Status_Connecting);
         
         try
         {
             var device = await BluetoothLEDevice.FromIdAsync(deviceId);
             if (device == null) 
             {
-                StatusChanged?.Invoke("错误：未找到设备");
+                StatusChanged?.Invoke(Strings.Status_Error_DeviceNotFound);
                 return;
             }
 
             // Get Heart Rate Service (UUID 0x180D)
             var services = await device.GetGattServicesForUuidAsync(GattServiceUuids.HeartRate);
-            if (services.Status == GattCommunicationStatus.Success)
+            if (services.Services.Count > 0 && services.Status == GattCommunicationStatus.Success)
             {
                 // Get Measurement Characteristic (UUID 0x2A37)
                 var charResult = await services.Services[0].GetCharacteristicsForUuidAsync(GattCharacteristicUuids.HeartRateMeasurement);
-                if (charResult.Status == GattCommunicationStatus.Success)
+                if (charResult.Characteristics.Count > 0 && charResult.Status == GattCommunicationStatus.Success)
                 {
                     var characteristic = charResult.Characteristics[0];
                     
@@ -74,21 +75,21 @@ public class BluetoothService : IBluetoothService
                     };
                     
                     await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                    StatusChanged?.Invoke("已连接");
+                    StatusChanged?.Invoke(Strings.Status_Connected);
                 }
                 else
                 {
-                    StatusChanged?.Invoke("错误：未找到心率特征");
+                    StatusChanged?.Invoke(Strings.Status_Error_NoHrCharacteristic);
                 }
             }
             else 
             {
-                StatusChanged?.Invoke("错误：请在您的心率设备上开启广播");
+                StatusChanged?.Invoke(Strings.Status_Error_PleaseEnableHrBroadcast);
             }
         }
         catch (Exception ex)
         {
-            StatusChanged?.Invoke($"错误：{ex.Message}");
+            StatusChanged?.Invoke(string.Format(Strings.Status_Error_Exception, ex.Message));
         }
     }
 }

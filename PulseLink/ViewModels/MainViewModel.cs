@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PulseLink.Resources;
 using PulseLink.Services;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -13,12 +14,13 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly IBluetoothService _ble;
     private readonly StreamService _stream;
+    private readonly LocalizationService _loc;
 
     [ObservableProperty] 
     private int bpm = 0;
 
     [ObservableProperty] 
-    private string status = "准备就绪";
+    private string status;
 
     [ObservableProperty] 
     private string streamUrl;
@@ -29,10 +31,13 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<DeviceDisplay> Devices { get; } = new();
 
     // Dependency Injection Constructor
-    public MainViewModel(IBluetoothService ble, StreamService stream)
+    public MainViewModel(IBluetoothService ble, StreamService stream, LocalizationService loc)
     {
         _ble = ble;
         _stream = stream;
+        _loc = loc;
+        
+        status = Strings.Status_Ready;
         StreamUrl = _stream.StreamUrl;
 
         _ble.StatusChanged += HandleStatusChange;
@@ -83,10 +88,16 @@ public partial class MainViewModel : ObservableObject
     {
         if (!IsStreaming) 
         { 
-            Status = "正在初始化直播...";
+            Status = Strings.Status_InitializingStream;
             await _stream.StartAsync(); 
             IsStreaming = true; 
-            Status = "直播已上线"; 
+            Status = Strings.Status_LivestreamOnline; 
         }
+    }
+    
+    [RelayCommand]
+    public void SwitchLanguage(string culture)
+    {
+        _loc.SetLanguage(culture);
     }
 }

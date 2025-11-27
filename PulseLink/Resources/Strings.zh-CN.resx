@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <data name="App_Title" xml:space="preserve">
+        <value>心率连接</value>
+    </data>
+    <data name="Button_Live" xml:space="preserve">
+        <value>直播</value>
+    </data>
+    <data name="Button_Scan" xml:space="preserve">
+        <value>扫描</value>
+    </data>
+    <data name="Checkbox_GhostMode" xml:space="preserve">
+        <value>幽灵模式</value>
+    </data>
+    <data name="Label_Bpm" xml:space="preserve">
+        <value>次/分钟</value>
+    </data>
+    <data name="Label_Header" xml:space="preserve">
+        <value>脉冲 // 连接</value>
+    </data>
+    <data name="Status_Connected" xml:space="preserve">
+        <value>已连接</value>
+    </data>
+    <data name="Status_Connecting" xml:space="preserve">
+        <value>正在连接...</value>
+    </data>
+    <data name="Status_Error_DeviceNotFound" xml:space="preserve">
+        <value>错误：未找到设备</value>
+    </data>
+    <data name="Status_Error_Exception" xml:space="preserve">
+        <value>错误：{0}</value>
+    </data>
+    <data name="Status_Error_NoHrCharacteristic" xml:space="preserve">
+        <value>错误：未找到心率特征</value>
+    </data>
+    <data name="Status_Error_PleaseEnableHrBroadcast" xml:space="preserve">
+        <value>错误：请在您的心率设备上开启广播</value>
+    </data>
+    <data name="Status_InitializingStream" xml:space="preserve">
+        <value>正在初始化直播...</value>
+    </data>
+    <data name="Status_LivestreamOnline" xml:space="preserve">
+        <value>直播已上线</value>
+    </data>
+    <data name="Status_Ready" xml:space="preserve">
+        <value>准备就绪</value>
+    </data>
+    <data name="Status_Scanning" xml:space="preserve">
+        <value>正在扫描...</value>
+    </data>
+    <data name="Tooltip_GhostMode" xml:space="preserve">
+        <value>启用鼠标穿透，方便游戏时使用</value>
+    </data>
+    <data name="Web_Label_Bpm" xml:space="preserve">
+        <value>次/分钟</value>
+    </data>
+    <data name="Web_Label_LiveHeartRate" xml:space="preserve">
+        <value>实时心率</value>
+    </data>
+    <data name="Web_Status_Connecting" xml:space="preserve">
+        <value>正在连接...</value>
+    </data>
+    <data name="Web_Status_Disconnected" xml:space="preserve">
+        <value>已断开</value>
+    </data>
+    <data name="Web_Status_Error_NoUserId" xml:space="preserve">
+        <value>错误：URL中缺少用户ID</value>
+    </data>
+    <data name="Web_Status_LiveSignalActive" xml:space="preserve">
+        <value>信号传输中</value>
+    </data>
+    <data name="Web_Status_WaitingForData" xml:space="preserve">
+        <value>等待数据中...</value>
+    </data>
+    <data name="Web_Title" xml:space="preserve">
+        <value>心率连接 - 实时数据</value>
+    </data>
+</root>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>心率连接 - 实时数据</title>
+    <title>PulseLink Live</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -18,13 +18,54 @@
 </head>
 <body>
     <div class="container">
-        <div>实时心率</div>
+        <div data-i18n-key="Web_Label_LiveHeartRate">LIVE HEART RATE</div>
         <div id="bpm">--</div>
-        <div>次/分钟</div>
+        <div data-i18n-key="Web_Label_Bpm">BPM</div>
         <canvas id="chart"></canvas>
-        <div id="status" class="status">正在连接...</div>
+        <div id="status" class="status" data-i18n-key="Web_Status_Connecting">CONNECTING...</div>
     </div>
     <script>
+        const translations = {
+            "en": {
+                "Web_Title": "PulseLink Live",
+                "Web_Label_LiveHeartRate": "LIVE HEART RATE",
+                "Web_Label_Bpm": "BPM",
+                "Web_Status_Connecting": "CONNECTING...",
+                "Web_Status_Disconnected": "DISCONNECTED",
+                "Web_Status_WaitingForData": "WAITING FOR DATA...",
+                "Web_Status_LiveSignalActive": "LIVE SIGNAL ACTIVE",
+                "Web_Status_Error_NoUserId": "ERROR: NO USER ID"
+            },
+            "zh": {
+                "Web_Title": "心率连接 - 实时数据",
+                "Web_Label_LiveHeartRate": "实时心率",
+                "Web_Label_Bpm": "次/分钟",
+                "Web_Status_Connecting": "正在连接...",
+                "Web_Status_Disconnected": "已断开",
+                "Web_Status_WaitingForData": "等待数据中...",
+                "Web_Status_LiveSignalActive": "信号传输中",
+                "Web_Status_Error_NoUserId": "错误：URL中缺少用户ID"
+            }
+        };
+
+        function setLanguage() {
+            const lang = navigator.language.startsWith('zh') ? 'zh' : 'en';
+            const resources = translations[lang];
+            
+            document.title = resources["Web_Title"];
+            document.querySelectorAll('[data-i18n-key]').forEach(el => {
+                const key = el.getAttribute('data-i18n-key');
+                if (resources[key]) {
+                    el.innerText = resources[key];
+                }
+            });
+            
+            // Return resources for MQTT status updates
+            return resources;
+        }
+
+        const i18n = setLanguage();
+
         const urlParams = new URLSearchParams(window.location.search);
         const userId = urlParams.get('id');
         const ctx = document.getElementById('chart').getContext('2d');
@@ -36,7 +77,7 @@
 
         if(userId) {
             const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "Viewer_" + Math.random());
-            client.onConnectionLost = (o) => document.getElementById('status').innerText = "已断开";
+            client.onConnectionLost = (o) => document.getElementById('status').innerText = i18n["Web_Status_Disconnected"];
             client.onMessageArrived = (msg) => {
                 const d = JSON.parse(msg.payloadString);
                 const el = document.getElementById('bpm');
@@ -47,10 +88,18 @@
                 chart.data.datasets[0].data.push(d.bpm);
                 chart.data.datasets[0].data.shift();
                 chart.update();
-                document.getElementById('status').innerText = "信号传输中";
+                document.getElementById('status').innerText = i18n["Web_Status_LiveSignalActive"];
             };
-            client.connect({ onSuccess: () => { client.subscribe(`pulselink/${userId}/data`); document.getElementById('status').innerText = "等待数据中..."; }, useSSL: true });
-        } else { document.getElementById('status').innerText = "错误：URL中缺少用户ID"; }
+            client.connect({ 
+                onSuccess: () => { 
+                    client.subscribe(`pulselink/${userId}/data`); 
+                    document.getElementById('status').innerText = i18n["Web_Status_WaitingForData"]; 
+                }, 
+                useSSL: true 
+            });
+        } else { 
+            document.getElementById('status').innerText = i18n["Web_Status_Error_NoUserId"]; 
+        }
     </script>
 </body>
 </html>
