@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulsoid 实时心率</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            /* 背景颜色：黑色 */
+            background-color: #000000;
+            /* 布局设置：让心率显示在正中间 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        iframe {
+            /* 占满整个屏幕，Pulsoid 会自动居中显示心率 */
+            width: 100vw;
+            height: 100vh;
+            border: none;
+            /* 去掉丑陋的边框 */
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ⬇️⬇️⬇️ 重要：请将下面的链接替换为你自己的 Pulsoid Widget URL ⬇️⬇️⬇️ -->
+    <iframe src="https://pulsoid.net/widget/view/04e6634d-05d0-4cb9-927a-72a9c150aba4"></iframe>
+
+</body>
+
+</html>
