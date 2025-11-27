@@ -43,6 +43,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool isConnected = false; // Tracks Bluetooth connection status
 
+    [ObservableProperty]
+    private string githubPagesUrl = "点击刷新按钮获取 URL..."; // New property for GitHub Pages URL
+
     public ObservableCollection<DeviceDisplay> Devices { get; } = new();
 
     public MainViewModel(IBluetoothService ble, LocalizationService loc, StreamService streamService)
@@ -67,6 +70,7 @@ public partial class MainViewModel : ObservableObject
         // Initialize MqttStreamUrl and UserId from StreamService
         MqttStreamUrl = _streamService.StreamUrl;
         UserId = _streamService.UserId;
+        // GitHubPagesUrl is initialized by the ObservableProperty attribute and updated by StreamService_PropertyChanged
 
         _ = _streamService.StartAsync();
 
@@ -79,11 +83,18 @@ public partial class MainViewModel : ObservableObject
         if (e.PropertyName == nameof(StreamService.StreamUrl))
         {
             MqttStreamUrl = _streamService.StreamUrl;
+            githubPagesUrl = _streamService.StreamUrl; // Also update GitHubPagesUrl
         }
         if (e.PropertyName == nameof(StreamService.UserId))
         {
             UserId = _streamService.UserId;
         }
+    }
+
+    [RelayCommand]
+    private void RefreshGithubPagesUrl()
+    {
+        githubPagesUrl = _streamService.StreamUrl;
     }
 
     private void HandleStatusChange(string msg)
