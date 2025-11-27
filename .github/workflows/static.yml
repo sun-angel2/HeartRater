@@ -1,0 +1,46 @@
+# 工作流名称，会显示在 GitHub Actions 页面
+name: .NET Release Publisher
+
+# 触发条件：当你创建一个以 "v" 开头的标签时 (例如 v1.0, v1.0.1)
+on:
+  push:
+    tags:
+      - 'v*'
+
+# 任务列表
+jobs:
+  build-and-release:
+    # 运行环境：使用最新的 Windows 服务器
+    runs-on: windows-latest
+
+    # 任务步骤
+    steps:
+    # 步骤1：拉取你的代码到服务器
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 步骤2：安装 .NET 8 SDK 环境
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    # 步骤3：编译和发布项目
+    # 这条命令就是我们之前手动运行的，现在让 GitHub 替我们跑
+    - name: Publish application
+      run: dotnet publish ./PulseLink/PulseLink.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish
+
+    # 步骤4：将发布好的文件打包成 ZIP
+    - name: Create ZIP archive
+      run: Compress-Archive -Path ./publish/* -DestinationPath HeartRater-v${{ github.ref_name }}.zip
+
+    # 步骤5：创建 GitHub Release 并上传 ZIP 包
+    # 这是最酷的一步，它会自动创建一个带版本号的发布页面
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: HeartRater-v${{ github.ref_name }}.zip
+        # 使用标签名作为 Release 标题
+        name: Release ${{ github.ref_name }}
+        # 自动生成更新日志
+        generate_release_notes: true
