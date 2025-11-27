@@ -1,7 +1,0 @@
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\PulseLink.pdb
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\D3DCompiler_47_cor3.dll
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\PenImc_cor3.dll
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\PresentationNative_cor3.dll
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\vcruntime140_cor3.dll
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\wpfgfx_cor3.dll
-C:\Users\Suuny\Desktop\ProjectHEARTRATER\release\v2.0\PulseLink.exe
