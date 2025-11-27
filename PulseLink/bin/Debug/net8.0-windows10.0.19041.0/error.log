@@ -1,0 +1,469 @@
+2025/11/28 0:59:46: UI Thread Exception
+Message: Failed to listen on prefix 'http://127.0.0.1:8999/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 28
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 0:59:53: UI Thread Exception
+Message: Failed to listen on prefix 'http://127.0.0.1:8999/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 28
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 0:59:59: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 146
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 104
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:01:21: UI Thread Exception
+Message: Failed to listen on prefix 'http://127.0.0.1:8999/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 28
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:01:34: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 146
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 104
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:04:16: UI Thread Exception
+Message: Failed to listen on prefix 'http://127.0.0.1:8999/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 28
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:04:54: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 146
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 104
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:05:14: UI Thread Exception
+Message: Failed to listen on prefix 'http://127.0.0.1:8999/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 28
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:05:17: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 146
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 104
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:06:17: UI Thread Exception
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 87
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:07:10: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:07:11: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:07:26: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 147
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 113
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:20:45: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:20:45: UI Thread Exception
+Message: “设置属性“System.Windows.FrameworkElement.Style”时引发了异常。”，行号为“127”，行位置为“25”。
+Source: PresentationFramework
+Stack Trace:    at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at PulseLink.MainWindow.InitializeComponent() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml:line 1
+   at PulseLink.MainWindow..ctor(MainViewModel vm) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml.cs:line 17
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 99
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void RewrapException(System.Exception, System.Xaml.IXamlLineInfo, System.Uri)
+Inner Exception: “”不是 Setter 上“System.Windows.Documents.TextElement.FontFamily”属性的有效值。
+
+2025/11/28 1:23:05: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:23:05: UI Thread Exception
+Message: “设置属性“System.Windows.FrameworkElement.Style”时引发了异常。”，行号为“127”，行位置为“25”。
+Source: PresentationFramework
+Stack Trace:    at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at PulseLink.MainWindow.InitializeComponent() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml:line 1
+   at PulseLink.MainWindow..ctor(MainViewModel vm) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml.cs:line 17
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 99
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void RewrapException(System.Exception, System.Xaml.IXamlLineInfo, System.Uri)
+Inner Exception: “”不是 Setter 上“System.Windows.Documents.TextElement.FontFamily”属性的有效值。
+
+2025/11/28 1:23:37: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:23:38: UI Thread Exception
+Message: “设置属性“System.Windows.FrameworkElement.Style”时引发了异常。”，行号为“127”，行位置为“25”。
+Source: PresentationFramework
+Stack Trace:    at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at PulseLink.MainWindow.InitializeComponent() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml:line 1
+   at PulseLink.MainWindow..ctor(MainViewModel vm) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml.cs:line 17
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 99
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void RewrapException(System.Exception, System.Xaml.IXamlLineInfo, System.Uri)
+Inner Exception: “”不是 Setter 上“System.Windows.Documents.TextElement.FontFamily”属性的有效值。
+
+2025/11/28 1:24:29: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:24:29: UI Thread Exception
+Message: “设置属性“System.Windows.FrameworkElement.Style”时引发了异常。”，行号为“127”，行位置为“25”。
+Source: PresentationFramework
+Stack Trace:    at System.Windows.Markup.XamlReader.RewrapException(Exception e, IXamlLineInfo lineInfo, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.Load(XamlReader xamlReader, IXamlObjectWriterFactory writerFactory, Boolean skipJournaledProperties, Object rootObject, XamlObjectWriterSettings settings, Uri baseUri)
+   at System.Windows.Markup.WpfXamlLoader.LoadBaml(XamlReader xamlReader, Boolean skipJournaledProperties, Object rootObject, XamlAccessLevel accessLevel, Uri baseUri)
+   at System.Windows.Markup.XamlReader.LoadBaml(Stream stream, ParserContext parserContext, Object parent, Boolean closeStream)
+   at System.Windows.Application.LoadComponent(Object component, Uri resourceLocator)
+   at PulseLink.MainWindow.InitializeComponent() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml:line 1
+   at PulseLink.MainWindow..ctor(MainViewModel vm) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\MainWindow.xaml.cs:line 17
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 99
+   at System.Windows.Application.<.ctor>b__1_0(Object unused)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void RewrapException(System.Exception, System.Xaml.IXamlLineInfo, System.Uri)
+Inner Exception: “”不是 Setter 上“System.Windows.Documents.TextElement.FontFamily”属性的有效值。
+
+2025/11/28 1:25:15: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:25:15: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:25:23: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 147
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 113
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:26:45: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:26:46: HttpServerService Startup Error
+Message: 不支持该请求。
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:27:03: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 147
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 113
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+
+2025/11/28 1:30:32: HttpServerService Startup Error
+Message: Failed to listen on prefix 'http://127.0.0.1:8998/' because it conflicts with an existing registration on the machine.
+Source: System.Net.HttpListener
+Stack Trace:    at System.Net.HttpListener.AddPrefixCore(String registeredPrefix)
+   at System.Net.HttpListener.AddAllPrefixes()
+   at System.Net.HttpListener.Start()
+   at PulseLink.Services.HttpServerService.Start() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 29
+   at PulseLink.App.OnStartup(Object sender, StartupEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 89
+Target Site: Void AddPrefixCore(System.String)
+Inner Exception: 
+
+2025/11/28 1:30:45: UI Thread Exception
+Message: Cannot access a disposed object.
+Object name: 'System.Net.HttpListener'.
+Source: System.Private.CoreLib
+Stack Trace:    at System.Net.HttpListener.Stop()
+   at PulseLink.Services.HttpServerService.Dispose() in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\Services\HttpServerService.cs:line 147
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.Dispose()
+   at PulseLink.App.OnExit(Object sender, ExitEventArgs e) in C:\Users\Suuny\Desktop\ProjectHEARTRATER\PulseLink\App.xaml.cs:line 113
+   at System.Windows.Application.DoShutdown()
+   at System.Windows.Application.ShutdownImpl()
+   at System.Windows.Application.ShutdownCallback(Object arg)
+   at System.Windows.Threading.ExceptionWrapper.InternalRealCall(Delegate callback, Object args, Int32 numArgs)
+   at System.Windows.Threading.ExceptionWrapper.TryCatchWhen(Object source, Delegate callback, Object args, Int32 numArgs, Delegate catchHandler)
+Target Site: Void ThrowObjectDisposedException(System.Object)
+Inner Exception: 
+

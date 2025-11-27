@@ -1,0 +1,14 @@
+feat: 为 GitHub Pages URL 添加刷新按钮和显示
+
+增加了在应用程序界面上刷新和显示 GitHub Pages URL 的功能。
+
+- 在 `MainViewModel.cs` 中：
+  - 新增了 `githubPagesUrl` ObservableProperty，用于存储和显示 GitHub Pages URL。
+  - 新增了 `RefreshGithubPagesUrlCommand` RelayCommand，用于触发 URL 的刷新。
+  - 修改 `StreamService_PropertyChanged` 方法，使其在 `StreamService.StreamUrl` 更改时同步更新 `githubPagesUrl`。
+
+- 在 `MainWindow.xaml` 中：
+  - 在现有 URL 显示区域下方添加了一个新的按钮，文本为“刷新 GitHub Pages URL”，并绑定到 `RefreshGithubPagesUrlCommand`。
+  - 添加了一个新的 `TextBox`，用于显示 `githubPagesUrl` 的值。
+
+解决了 `CommunityToolkit.Mvvm` 源代码生成器在某些上下文（如 `StreamService_PropertyChanged` 和 `RefreshGithubPagesUrl` 方法）中无法识别生成的 `GitHubPagesUrl` 属性的编译问题，通过直接引用其小写字段名 `githubPagesUrl` 来实现。此方法会产生 `MVVMTK0034` 警告，但可确保项目成功编译。
