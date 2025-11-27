@@ -76,7 +76,7 @@
         });
 
         if(userId) {
-            const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "Viewer_" + Math.random());
+            const client = new Paho.MQTT.Client("broker.emqx.io", 8084, "Viewer_" + Math.random());
             client.onConnectionLost = (o) => document.getElementById('status').innerText = i18n["Web_Status_Disconnected"];
             client.onMessageArrived = (msg) => {
                 const d = JSON.parse(msg.payloadString);

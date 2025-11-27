@@ -2,68 +2,80 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PulseLink.Resources;
 using PulseLink.Services;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Windows;
 
 namespace PulseLink.ViewModels;
 
-public record DeviceDisplay(string Name, string Id);
-
 public partial class MainViewModel : ObservableObject
 {
     private readonly IBluetoothService _ble;
-    private readonly StreamService _stream;
-    private readonly LocalizationService _loc;
-
-    [ObservableProperty] 
+    private readonly LocalizationService _loc; // Inject LocalizationService
+    
+    [ObservableProperty]
     private int bpm = 0;
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private string status;
 
-    [ObservableProperty] 
-    private string streamUrl;
+    [ObservableProperty]
+    private bool isGhostMode = false;
+    
+    [ObservableProperty]
+    private string localServerUrl = "Initializing server...";
 
-    [ObservableProperty] 
-    private bool isStreaming;
-
-    public ObservableCollection<DeviceDisplay> Devices { get; } = new();
-
-    // Dependency Injection Constructor
-    public MainViewModel(IBluetoothService ble, StreamService stream, LocalizationService loc)
+    public MainViewModel(IBluetoothService ble, HttpServerService httpServer, LocalizationService loc) // Add LocalizationService to constructor
     {
         _ble = ble;
-        _stream = stream;
-        _loc = loc;
-        
+        _loc = loc; // Assign LocalizationService
         status = Strings.Status_Ready;
-        StreamUrl = _stream.StreamUrl;
 
         _ble.StatusChanged += HandleStatusChange;
+        _ble.HeartRateUpdated += val => { Bpm = val; };
 
-        _ble.HeartRateUpdated += val => 
-        {
-            Bpm = val;
-            if (IsStreaming) _stream.SendBpmAsync(val);
-        };
+        SetLocalServerUrl(httpServer.ServerUrl);
+
+        _ble.StartScan();
     }
+
+    private void SetLocalServerUrl(string baseUrl)
+    {
+        try
+        {
+            var ipv6Address = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(n => n.OperationalStatus == OperationalStatus.Up && n.NetworkInterfaceType != NetworkInterfaceType.Loopback)
+                .SelectMany(n => n.GetIPProperties().UnicastAddresses)
+                .FirstOrDefault(ip => ip.Address.AddressFamily == AddressFamily.InterNetworkV6 && 
+                                       !ip.Address.IsIPv6LinkLocal &&
+                                       ip.PrefixOrigin != PrefixOrigin.WellKnown &&
+                                       ip.SuffixOrigin != SuffixOrigin.LinkLayerAddress &&
+                                       ip.Address.ScopeId == 0); // Exclude addresses with scope IDs (like link-local)
+
+            if (ipv6Address != null)
+            {
+                var port = new System.Uri(baseUrl).Port;
+                LocalServerUrl = $"http://[{ipv6Address.Address}]:{port}";
+            }
+            else
+            {
+                LocalServerUrl = "No suitable IPv6 address found.";
+            }
+        }
+        catch
+        {
+            LocalServerUrl = "Could not determine local IP.";
+        }
+    }
+
 
     private void HandleStatusChange(string msg)
     {
-        // Using Dispatcher to update UI collection from background thread
-        Application.Current.Dispatcher.Invoke(() => 
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            if (msg.StartsWith("DISCOVERED:")) 
-            {
-                var info = msg.Replace("DISCOVERED:", "");
-                var parts = info.Split('|');
-                if (parts.Length == 2)
-                {
-                    Devices.Add(new DeviceDisplay(parts[0], parts[1]));
-                }
-            }
-            else 
+            if (!msg.StartsWith("DISCOVERED:"))
             {
                 Status = msg;
             }
@@ -71,32 +83,14 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void Scan() 
-    { 
-        Devices.Clear(); 
-        _ble.StartScan(); 
+    private void ToggleGhostMode()
+    {
+        IsGhostMode = !IsGhostMode;
+        Status = IsGhostMode ? "Ghost mode enabled" : "Ghost mode disabled";
     }
 
     [RelayCommand]
-    public void Connect(string id) 
-    {
-        _ble.ConnectAsync(id);
-    }
-
-    [RelayCommand]
-    public async Task ToggleStream()
-    {
-        if (!IsStreaming) 
-        { 
-            Status = Strings.Status_InitializingStream;
-            await _stream.StartAsync(); 
-            IsStreaming = true; 
-            Status = Strings.Status_LivestreamOnline; 
-        }
-    }
-    
-    [RelayCommand]
-    public void SwitchLanguage(string culture)
+    private void SwitchLanguage(string culture)
     {
         _loc.SetLanguage(culture);
     }

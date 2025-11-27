@@ -15,20 +15,82 @@
         MouseLeftButtonDown="Window_MouseDown">
 
     <Window.Resources>
-        <Style x:Key="LangButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Padding" Value="2"/>
-            <Setter Property="Margin" Value="2,0"/>
-            <Setter Property="FontSize" Value="10"/>
-            <Setter Property="Width" Value="20"/>
+        <!-- Jelly Button Style -->
+        <Style x:Key="JellyButton" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#44FFFFFF" Offset="0.0" />
+                        <GradientStop Color="#11FFFFFF" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#88FFFFFF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="2"/>
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="bd" Property="Background" Value="#2200FF41"/>
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#66FFFFFF" Offset="0.0" />
+                                            <GradientStop Color="#33FFFFFF" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#CCFFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background">
+                                    <Setter.Value>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#11FFFFFF" Offset="0.0" />
+                                            <GradientStop Color="#00FFFFFF" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#44FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Window Control Button Style -->
+        <Style x:Key="WindowControlButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#FFAAAAAA"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Marlett"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" x:Name="border">
+                            <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#44FFFFFF"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#22FFFFFF"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -37,85 +99,62 @@
         </Style>
     </Window.Resources>
 
-    <Border BorderBrush="{StaticResource NeonGreen}" BorderThickness="1" CornerRadius="5" Margin="5">
-        <Grid Margin="10">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <DockPanel LastChildFill="False">
-                <TextBlock Text="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Label_Header}" Foreground="White" FontWeight="Bold" FontFamily="Consolas" VerticalAlignment="Center"/>
-                
-                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-                    <Button Content="中" Style="{StaticResource LangButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="zh-CN"/>
-                    <Button Content="EN" Style="{StaticResource LangButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
-                    <CheckBox Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Checkbox_GhostMode}" Foreground="Gray" FontSize="10" 
-                              VerticalAlignment="Center" Margin="5,0,0,0"
-                              Checked="ToggleClickThrough" Unchecked="ToggleClickThrough"
-                              ToolTip="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Tooltip_GhostMode}"/>
-                </StackPanel>
-            </DockPanel>
+        <!-- Custom Title Bar -->
+        <DockPanel Grid.Row="0" LastChildFill="False" Background="#11000000">
+            <TextBlock Text="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.App_Title}" 
+                       Foreground="White" 
+                       VerticalAlignment="Center"
+                       Margin="10,0,0,0"
+                       FontWeight="SemiBold"/>
 
-            <!-- Main Content -->
-            <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                <!-- BPM Display -->
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button Content="中" Style="{StaticResource WindowControlButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="zh-CN"/>
+                <Button Content="EN" Style="{StaticResource WindowControlButton}" Command="{Binding SwitchLanguageCommand}" CommandParameter="en-US"/>
+                <Button x:Name="PART_Minimize" Content="0" Style="{StaticResource WindowControlButton}" Click="Minimize_Click"/>
+                <Button x:Name="PART_Tray" Content="1" Style="{StaticResource WindowControlButton}" Click="Tray_Click"/>
+                <Button x:Name="PART_Close" Content="r" Style="{StaticResource WindowControlButton}" Click="Close_Click"/>
+            </StackPanel>
+        </DockPanel>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1">
+            <StackPanel VerticalAlignment="Center">
                 <TextBlock Text="{Binding Bpm}" 
                            Foreground="{StaticResource NeonGreen}" 
-                           FontSize="70" 
+                           FontSize="90" 
                            FontWeight="Bold" 
                            HorizontalAlignment="Center"
                            FontFamily="Arial">
                     <TextBlock.Effect>
-                        <DropShadowEffect Color="#00FF41" BlurRadius="20" ShadowDepth="0"/>
+                        <DropShadowEffect Color="#00FF41" BlurRadius="25" ShadowDepth="0"/>
                     </TextBlock.Effect>
                 </TextBlock>
-                
-                <TextBlock Text="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Label_Bpm}" Foreground="White" HorizontalAlignment="Center" FontSize="12" Opacity="0.5" Margin="0,-10,0,10"/>
-                
-                <TextBlock Text="{Binding Status}" Foreground="Gray" HorizontalAlignment="Center" FontSize="10" FontFamily="Consolas" Margin="0,0,0,5" TextWrapping="Wrap"/>
 
-                <!-- Device List -->
-                <ListBox ItemsSource="{Binding Devices}" 
-                         Height="70" 
-                         Background="Transparent" 
-                         BorderThickness="0" 
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Button Content="{Binding Name}" 
-                                    Command="{Binding DataContext.ConnectCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                    CommandParameter="{Binding Id}" 
-                                    FontSize="10" 
-                                    Width="180"
-                                    Margin="0,2"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
+                <TextBlock Text="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Label_Bpm}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Opacity="0.6" Margin="0,-15,0,20"/>
 
-            <!-- Footer Controls -->
-            <StackPanel Grid.Row="2">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Button Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_Scan}" Command="{Binding ScanCommand}" Margin="0,0,2,0"/>
-                    <Button Grid.Column="1" Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_Live}" Command="{Binding ToggleStreamCommand}" Margin="2,0,0,0"/>
-                </Grid>
-                
-                <TextBox Text="{Binding StreamUrl}" 
+                <TextBlock Text="{Binding Status}" Foreground="Gray" HorizontalAlignment="Center" FontSize="12" FontFamily="Consolas" Margin="10,0,10,20" TextWrapping="Wrap"/>
+
+                <Button Content="{Binding Source={StaticResource LocalizedStrings}, Path=Strings.Button_ToggleGhost}" 
+                        Command="{Binding ToggleGhostModeCommand}"
+                        Style="{StaticResource JellyButton}"
+                        HorizontalAlignment="Center"/>
+
+                <TextBox Text="{Binding LocalServerUrl}" 
                          Background="Transparent" 
-                         Foreground="#555" 
+                         Foreground="#777"
                          BorderThickness="0" 
-                         FontSize="9" 
-                         Margin="0,5,0,0" 
+                         FontSize="10" 
+                         Margin="0,15,0,0" 
                          IsReadOnly="True"
+                         TextAlignment="Center"
                          FontFamily="Consolas"/>
             </StackPanel>
         </Grid>
-    </Border>
+    </Grid>
 </Window>

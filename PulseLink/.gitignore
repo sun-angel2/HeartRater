@@ -4,6 +4,7 @@
 # Build files
 /bin/
 /obj/
+/release/
 
 # User-specific files
 *.user

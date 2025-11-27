@@ -18,14 +18,14 @@ public class StreamService
         _userId = Guid.NewGuid().ToString("N").Substring(0, 8); // Generate short random ID
     }
 
-    public string StreamUrl => $"https://sun-angel2.github.io/HeartRater/PulseLink/web/index.html?id={_userId}";
+    public string StreamUrl => $"https://sun-angel2.github.io/HeartRater/?id={_userId}";
 
     public async Task StartAsync()
     {
         if (_client.IsConnected) return;
 
         var options = new MqttClientOptionsBuilder()
-            .WithTcpServer("broker.emqx.io", 1883)
+            .WithWebSocketServer("wss://broker.emqx.io:8084/mqtt")
             .WithClientId($"PulseLink_{_userId}")
             // Last Will and Testament: Notify offline status if crashed
             .WithWillTopic($"pulselink/{_userId}/status")

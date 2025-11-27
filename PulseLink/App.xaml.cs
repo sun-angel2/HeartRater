@@ -10,6 +10,12 @@ public partial class App : Application
 {
     private IServiceProvider? _serviceProvider;
 
+    public App()
+    {
+        Startup += OnStartup;
+        Exit += OnExit;
+    }
+
     private void OnStartup(object sender, StartupEventArgs e)
     {
         var serviceCollection = new ServiceCollection();
@@ -18,11 +24,11 @@ public partial class App : Application
         serviceCollection.AddSingleton<IBluetoothService, BluetoothService>();
         serviceCollection.AddSingleton<StreamService>();
         serviceCollection.AddSingleton<LocalizationService>();
+        serviceCollection.AddSingleton<HttpServerService>(); // Add the new service
 
         // 2. Register ViewModels
         serviceCollection.AddSingleton<MainViewModel>();
         serviceCollection.AddSingleton(provider => (ObservableStrings)Current.Resources["LocalizedStrings"]);
-
 
         // 3. Register Views
         serviceCollection.AddSingleton<MainWindow>();
@@ -34,9 +40,18 @@ public partial class App : Application
         var observableStrings = _serviceProvider.GetRequiredService<ObservableStrings>();
         locService.LanguageChanged += observableStrings.Refresh;
 
+        // 5. Start HTTP Server
+        var httpServer = _serviceProvider.GetRequiredService<HttpServerService>();
+        httpServer.Start();
 
-        // 5. Launch Main Window
+        // 6. Launch Main Window
         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
+    }
+
+    private void OnExit(object sender, ExitEventArgs e)
+    {
+        // Ensure services are disposed on exit
+        _serviceProvider?.GetService<HttpServerService>()?.Dispose();
     }
 }
