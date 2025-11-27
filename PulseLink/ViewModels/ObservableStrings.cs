@@ -8,7 +8,7 @@ public class ObservableStrings : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public Strings Strings { get; } = new();
+    public Strings Strings => new Strings(); // A new instance to ensure property changed works with new culture info.
 
     public void Refresh()
     {
