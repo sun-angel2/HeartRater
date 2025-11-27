@@ -24,7 +24,6 @@ is_scanning = False
 is_connected = False
 
 # --- 4. Web Server 配置 ---
-# 变量名改为 flask_app 防止冲突
 flask_app = Flask(__name__)
 WEB_PORT = 8088
 
@@ -37,71 +36,35 @@ HTML_TEMPLATE = """
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>心率监控 (Web版)</title>
     <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .container { text-align: center; }
-        .heart-icon {
-            font-size: 100px;
-            color: #ff3b30;
-            margin-bottom: 20px;
-            display: inline-block;
-            transition: transform 0.1s ease;
-        }
-        .hr-value {
-            font-size: 80px;
-            font-weight: bold;
-            color: #2ECC71;
-        }
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .heart-icon { font-size: 100px; color: #ff3b30; margin-bottom: 20px; display: inline-block; transition: transform 0.1s ease; }
+        .hr-value { font-size: 80px; font-weight: bold; color: #2ECC71; }
         .label { font-size: 20px; color: #888; margin-top: -10px;}
         .beat { animation: heartbeat 0.4s ease-in-out; }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.3); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.15); }
-            100% { transform: scale(1); }
-        }
+        @keyframes heartbeat { 0% { transform: scale(1); } 25% { transform: scale(1.3); } 50% { transform: scale(1); } 75% { transform: scale(1.15); } 100% { transform: scale(1); } }
         .footer { position: fixed; bottom: 10px; font-size: 12px; color: #444; }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div style="text-align: center;">
         <div id="heart" class="heart-icon">❤️</div>
         <div id="hr-display" class="hr-value">--</div>
         <div class="label">BPM</div>
     </div>
     <div class="footer">Real-time Heart Rate</div>
-
     <script>
         function updateHeartRate() {
-            fetch('/api/hr')
-                .then(response => response.json())
-                .then(data => {
-                    const hrDisplay = document.getElementById('hr-display');
-                    const heart = document.getElementById('heart');
-                    
-                    if (data.hr > 0) {
-                        hrDisplay.innerText = data.hr;
-                        hrDisplay.style.color = "#2ECC71";
-                        heart.classList.remove('beat');
-                        void heart.offsetWidth; 
-                        heart.classList.add('beat');
-                    } else {
-                        hrDisplay.innerText = "--";
-                        hrDisplay.style.color = "grey";
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+            fetch('/api/hr').then(r => r.json()).then(data => {
+                const hrDisplay = document.getElementById('hr-display');
+                const heart = document.getElementById('heart');
+                if (data.hr > 0) {
+                    hrDisplay.innerText = data.hr;
+                    hrDisplay.style.color = "#2ECC71";
+                    heart.classList.remove('beat'); void heart.offsetWidth; heart.classList.add('beat');
+                } else {
+                    hrDisplay.innerText = "--"; hrDisplay.style.color = "grey";
+                }
+            }).catch(e => console.error(e));
         }
         setInterval(updateHeartRate, 1000);
     </script>
@@ -110,49 +73,77 @@ HTML_TEMPLATE = """
 """
 
 @flask_app.route('/')
-def index():
-    return render_template_string(HTML_TEMPLATE)
+def index(): return render_template_string(HTML_TEMPLATE)
 
 @flask_app.route('/api/hr')
-def get_hr():
-    global hr_value
-    return jsonify({"hr": hr_value})
+def get_hr(): global hr_value; return jsonify({"hr": hr_value})
 
 def run_flask():
-    # 关键修复：强制绑定到 '::' (监听所有 IPv6 地址)
-    # 这比绑定特定 IP 更稳定，能解决 502 问题
     print(f"Web Server 正在启动... 监听端口 {WEB_PORT}")
     try:
         flask_app.run(host='::', port=WEB_PORT, debug=False, use_reloader=False, threaded=True)
     except Exception as e:
         print(f"Web Server 启动失败 (IPv6): {e}")
-        # 如果 IPv6 失败，尝试 IPv4
         try:
-            print("尝试回退到 IPv4...")
             flask_app.run(host='0.0.0.0', port=WEB_PORT, debug=False, use_reloader=False, threaded=True)
-        except Exception as e2:
-            print(f"Web Server 启动彻底失败: {e2}")
+        except Exception as e2: print(f"Web Server 启动彻底失败: {e2}")
 
 
-# --- 5. 桌面显示小组件 ---
+# --- 5. [美化版] 桌面显示小组件 ---
 class HRWidget(ctk.CTkToplevel):
     def __init__(self, master):
         super().__init__(master)
         self.withdraw()
         self.overrideredirect(True) 
         self.attributes('-topmost', True) 
+        # 设置透明背景色
         self.wm_attributes("-transparentcolor", "#000001") 
         self.config(bg="#000001") 
 
+        # 主容器
         self.display_frame = ctk.CTkFrame(self, fg_color="#000001")
-        self.display_frame.pack(padx=10, pady=5)
+        self.display_frame.pack(padx=0, pady=0)
 
-        self.label_hr = ctk.CTkLabel(self.display_frame, text="---", font=("Segoe UI", 60, "bold"), text_color="green", bg_color="#000001")
-        self.label_hr.pack(side="left", padx=(0, 5), pady=5) 
-        self.label_heart = ctk.CTkLabel(self.display_frame, text="❤️", font=("Segoe UI Emoji", 40), text_color="red", bg_color="#000001")
-        self.label_heart.pack(side="left", pady=5) 
+        # 布局容器：横向排列 [心形] [数字]
+        self.content_box = ctk.CTkFrame(self.display_frame, fg_color="#000001")
+        self.content_box.pack()
 
-        for widget in [self.display_frame, self.label_hr, self.label_heart]:
+        # 心形图标
+        self.label_heart = ctk.CTkLabel(
+            self.content_box, 
+            text="❤️", 
+            font=("Segoe UI Emoji", 32), 
+            text_color="#FF3B30", # 苹果红
+            bg_color="#000001"
+        )
+        self.label_heart.pack(side="left", padx=(0, 5), pady=0) 
+
+        # 数字容器 (包含数值和单位)
+        self.text_box = ctk.CTkFrame(self.content_box, fg_color="#000001")
+        self.text_box.pack(side="left")
+
+        # 心率数值
+        self.label_hr = ctk.CTkLabel(
+            self.text_box, 
+            text="---", 
+            font=("Impact", 48), # 使用 Impact 字体更有 HUD 的感觉，如果没有则回退
+            text_color="#2ECC71", 
+            bg_color="#000001"
+        )
+        self.label_hr.pack(side="left", anchor="s") # 底部对齐
+
+        # BPM 单位 (小一点)
+        self.label_unit = ctk.CTkLabel(
+            self.text_box,
+            text=" BPM",
+            font=("Arial", 14, "bold"),
+            text_color="#888888",
+            bg_color="#000001"
+        )
+        self.label_unit.pack(side="left", anchor="s", pady=(0, 8)) # 稍微抬高一点
+
+        # 绑定拖动事件
+        for widget in [self.display_frame, self.content_box, self.text_box, self.label_heart, self.label_hr, self.label_unit]:
             widget.bind('<ButtonPress-1>', self._start_drag)
             widget.bind('<B1-Motion>', self._do_drag)
         
@@ -169,25 +160,51 @@ class HRWidget(ctk.CTkToplevel):
         self.geometry(f"+{x}+{y}")
 
     def _animate_heart(self):
+        # 获取基准大小
         try:
-            current_font_size = int(self.master.size_slider.get() * (2/3))
-        except (AttributeError, ValueError):
-            current_font_size = 40
+            base_size = int(self.master.size_slider.get())
+        except:
+            base_size = 48
+
+        icon_size = int(base_size * 0.7)
+        
         if self.heart_size_toggle:
-            self.label_heart.configure(font=("Segoe UI Emoji", current_font_size + 4)) 
+            self.label_heart.configure(font=("Segoe UI Emoji", icon_size + 4)) 
         else:
-            self.label_heart.configure(font=("Segoe UI Emoji", current_font_size)) 
+            self.label_heart.configure(font=("Segoe UI Emoji", icon_size)) 
+        
         self.heart_size_toggle = not self.heart_size_toggle
         self.after(500, self._animate_heart)
 
-    def update_hr_display(self, hr_val, color, size):
-        font_size = int(size)
+    def get_color_by_zone(self, hr):
+        """根据心率区间返回颜色"""
+        if hr < 100: return "#2ECC71" # 绿色 (轻松)
+        if hr < 120: return "#F1C40F" # 黄色 (燃脂)
+        if hr < 140: return "#E67E22" # 橙色 (耐力)
+        return "#E74C3C"              # 红色 (极限)
+
+    def update_hr_display(self, hr_val, custom_color, size_val):
+        font_size = int(size_val)
+        
         if hr_val > 0:
-            self.label_hr.configure(text=str(hr_val), text_color=color, font=("Segoe UI", font_size, "bold"))
-            self.label_heart.configure(text_color="red")
+            # 如果用户没填自定义颜色，则使用动态区间颜色
+            if not self.master.color_entry.get():
+                display_color = self.get_color_by_zone(hr_val)
+            else:
+                display_color = custom_color
+
+            self.label_hr.configure(
+                text=str(hr_val), 
+                text_color=display_color, 
+                font=("Impact", font_size)
+            )
+            self.label_heart.configure(text_color="#FF3B30") # 心形始终红色
+            self.label_unit.configure(text_color=display_color)
         else:
             self.label_hr.configure(text="---", text_color="grey")
             self.label_heart.configure(text_color="grey")
+            self.label_unit.configure(text_color="grey")
+        
         self.update_idletasks()
 
 
@@ -195,16 +212,14 @@ class HRWidget(ctk.CTkToplevel):
 class HRControlApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        
-        self.title("心率助手 v4.0 (稳定版)")
-        self.geometry("380x650") 
+        self.title("心率助手 v4.1 (HUD版)")
+        self.geometry("380x680") 
         self.resizable(False, False)
         
         self.current_hr_color = "#2ECC71"
         self.device_list = {} 
         self.ble_loop = None 
         self.stop_event = None 
-        
         self.web_server_started = False
         self.ipv6_address = self._get_global_ipv6()
         
@@ -221,28 +236,22 @@ class HRControlApp(ctk.CTk):
             for item in info:
                 ip = item[4][0]
                 if "%" in ip: ip = ip.split("%")[0]
-                if not ip.startswith("fe80") and not ip == "::1":
-                    candidates.append(ip)
+                if not ip.startswith("fe80") and not ip == "::1": candidates.append(ip)
             for ip in candidates:
                 if ip.startswith("2"): return ip 
             return candidates[0] if candidates else None
-        except Exception:
-            return None
+        except: return None
 
     def _get_local_ipv4(self):
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("8.8.8.8", 80))
-            ip = s.getsockname()[0]
-            s.close()
-            return ip
-        except:
-            return "127.0.0.1"
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]; s.close(); return ip
+        except: return "127.0.0.1"
 
     def _setup_ui(self):
+        # 状态栏
         status_frame = ctk.CTkFrame(self)
         status_frame.pack(fill="x", padx=15, pady=(20, 10))
-
         self.status_dot = ctk.CTkLabel(status_frame, text="●", font=("Arial", 20), text_color="red")
         self.status_dot.pack(side="left", padx=(10, 5))
         self.conn_label = ctk.CTkLabel(status_frame, text="未连接", font=("Segoe UI", 14), text_color="white")
@@ -250,131 +259,86 @@ class HRControlApp(ctk.CTk):
         self.device_name_label = ctk.CTkLabel(status_frame, text="设备: 无", font=("Segoe UI", 12), text_color="gray")
         self.device_name_label.pack(side="right", padx=(5, 10))
         
+        # 连接控制
         ctk.CTkLabel(self, text="设备连接", font=("Segoe UI", 16, "bold")).pack(pady=(10, 5))
         self.scan_button = ctk.CTkButton(self, text="① 扫描设备", command=self._start_scan)
         self.scan_button.pack(pady=5, padx=20, fill="x")
-
         self.device_combo = ctk.CTkComboBox(self, values=["请先扫描"], state="disabled")
         self.device_combo.pack(pady=5, padx=20, fill="x")
-        
         self.connect_button = ctk.CTkButton(self, text="② 连接选中设备", command=self._start_connect, state="disabled", fg_color="blue", hover_color="#4169e1")
         self.connect_button.pack(pady=(5, 10), padx=20, fill="x")
 
-        # --- IPv6 Web 共享功能 ---
+        # IPv6 Web
         ctk.CTkFrame(self, height=2, fg_color="#444444").pack(fill="x", padx=20, pady=10)
         ctk.CTkLabel(self, text=f"远程访问 (端口 {WEB_PORT})", font=("Segoe UI", 16, "bold")).pack(pady=(5, 5))
-        
         self.web_switch = ctk.CTkSwitch(self, text="开启 Web 服务", command=self._toggle_web_server)
         self.web_switch.pack(pady=5)
-        
         self.url_entry = ctk.CTkEntry(self, placeholder_text="服务未开启")
         self.url_entry.pack(pady=5, padx=20, fill="x")
         self.url_entry.configure(state="readonly")
-        
         self.copy_btn = ctk.CTkButton(self, text="复制链接", command=self._copy_url, fg_color="gray", state="disabled")
         self.copy_btn.pack(pady=5)
-        
         ctk.CTkLabel(self, text=f"提示: 确保防火墙放行端口 {WEB_PORT}", font=("Segoe UI", 11), text_color="gray").pack()
 
         # 显示控制
         ctk.CTkFrame(self, height=2, fg_color="#444444").pack(fill="x", padx=20, pady=10)
-        ctk.CTkLabel(self, text="桌面显示控制", font=("Segoe UI", 16, "bold")).pack(pady=(5, 5))
-
-        self.toggle_switch = ctk.CTkSwitch(self, text="悬浮窗显示", command=self._toggle_display, width=60, variable=self.toggle_display_var)
+        ctk.CTkLabel(self, text="HUD 显示控制", font=("Segoe UI", 16, "bold")).pack(pady=(5, 5))
+        self.toggle_switch = ctk.CTkSwitch(self, text="桌面悬浮窗", command=self._toggle_display, width=60, variable=self.toggle_display_var)
         self.toggle_switch.pack(pady=5)
-
-        ctk.CTkLabel(self, text="字体大小 & 颜色", font=("Segoe UI", 12)).pack(pady=2)
-        size_frame = ctk.CTkFrame(self, fg_color="transparent")
-        size_frame.pack(fill="x", padx=20)
         
-        self.size_slider = ctk.CTkSlider(size_frame, from_=30, to=100, number_of_steps=70, command=self._on_size_change)
+        ctk.CTkLabel(self, text="大小调整", font=("Segoe UI", 12)).pack(pady=2)
+        self.size_slider = ctk.CTkSlider(self, from_=30, to=120, number_of_steps=90, command=self._on_size_change)
         self.size_slider.set(60)
-        self.size_slider.pack(side="left", fill="x", expand=True, padx=(0, 10))
-        
-        self.color_entry = ctk.CTkEntry(size_frame, width=80, placeholder_text="#2ECC71")
-        self.color_entry.insert(0, self.current_hr_color)
-        self.color_entry.pack(side="right")
-        
-        ctk.CTkButton(self, text="应用颜色", command=self._apply_custom_color, height=24).pack(pady=5)
-        
-        ctk.CTkButton(self, text="退出软件", command=self._on_closing, fg_color="red", hover_color="#c0392b").pack(pady=(15, 10), padx=20, fill="x")
+        self.size_slider.pack(pady=5, padx=20, fill="x")
 
-    # --- Web Server 逻辑 ---
+        ctk.CTkLabel(self, text="固定颜色 (留空则启用动态区间色)", font=("Segoe UI", 12)).pack(pady=5)
+        color_frame = ctk.CTkFrame(self, fg_color="transparent")
+        color_frame.pack(fill="x", padx=20)
+        self.color_entry = ctk.CTkEntry(color_frame, placeholder_text="例如: #00FF00")
+        self.color_entry.pack(side="left", fill="x", expand=True, padx=(0, 10))
+        ctk.CTkButton(color_frame, text="应用", command=self._apply_custom_color, width=60).pack(side="right")
+
+        ctk.CTkButton(self, text="退出软件", command=self._on_closing, fg_color="red", hover_color="#c0392b").pack(pady=(20, 10), padx=20, fill="x")
+
+    # 逻辑部分保持精简
     def _toggle_web_server(self):
         if self.web_switch.get() == 1:
             self.ipv6_address = self._get_global_ipv6()
-            
             if not self.web_server_started:
-                # 即使没有公网 IPv6 也启动，方便调试
-                t = threading.Thread(target=run_flask, daemon=True)
-                t.start()
+                flask_app.config['BIND_IP'] = self.ipv6_address if self.ipv6_address else "0.0.0.0"
+                threading.Thread(target=run_flask, daemon=True).start()
                 self.web_server_started = True
-
-            # URL 显示逻辑
-            if self.ipv6_address:
-                display_url = f"http://[{self.ipv6_address}]:{WEB_PORT}"
-                self.copy_btn.configure(state="normal", fg_color="green", text="复制 IPv6 链接 (公网)")
-            else:
-                local_ipv4 = self._get_local_ipv4()
-                display_url = f"http://{local_ipv4}:{WEB_PORT}"
-                self.copy_btn.configure(state="normal", fg_color="#AA5500", text="复制 IPv4 链接 (局域网)")
-
-            self.url_entry.configure(state="normal")
-            self.url_entry.delete(0, "end")
-            self.url_entry.insert(0, display_url)
-            self.url_entry.configure(state="readonly")
             
+            if self.ipv6_address:
+                url = f"http://[{self.ipv6_address}]:{WEB_PORT}"
+                self.copy_btn.configure(state="normal", fg_color="green", text="复制 IPv6 链接")
+            else:
+                url = f"http://{self._get_local_ipv4()}:{WEB_PORT}"
+                self.copy_btn.configure(state="normal", fg_color="#AA5500", text="复制内网链接")
+            self.url_entry.configure(state="normal"); self.url_entry.delete(0, "end"); self.url_entry.insert(0, url); self.url_entry.configure(state="readonly")
         else:
-            self.url_entry.configure(state="normal")
-            self.url_entry.delete(0, "end")
-            self.url_entry.insert(0, "服务已暂停")
-            self.url_entry.configure(state="readonly")
-            self.copy_btn.configure(state="disabled", fg_color="gray")
+            self.url_entry.configure(state="normal"); self.url_entry.delete(0, "end"); self.url_entry.insert(0, "服务已暂停"); self.url_entry.configure(state="readonly"); self.copy_btn.configure(state="disabled", fg_color="gray")
 
     def _copy_url(self):
-        url = self.url_entry.get()
-        self.clipboard_clear()
-        self.clipboard_append(url)
-        self.copy_btn.configure(text="已复制！")
-        self.after(2000, lambda: self.copy_btn.configure(text="复制链接"))
+        self.clipboard_clear(); self.clipboard_append(self.url_entry.get()); self.copy_btn.configure(text="已复制！"); self.after(2000, lambda: self.copy_btn.configure(text="复制链接"))
 
-    # --- 蓝牙 / UI 逻辑 ---
     def _toggle_display(self):
-        if self.toggle_display_var.get(): 
-            self.hr_widget.deiconify()
-        else:
-            self.hr_widget.withdraw()
-
-    def _on_size_change(self, value):
-        self.hr_widget.update_hr_display(hr_value, self.current_hr_color, value)
-
-    def _apply_custom_color(self):
-        new_color = self.color_entry.get()
-        if new_color:
-            self.current_hr_color = new_color
-            self.hr_widget.update_hr_display(hr_value, self.current_hr_color, self.size_slider.get())
-
+        if self.toggle_display_var.get(): self.hr_widget.deiconify()
+        else: self.hr_widget.withdraw()
+    def _on_size_change(self, value): self.hr_widget.update_hr_display(hr_value, self.current_hr_color, value)
+    def _apply_custom_color(self): self.current_hr_color = self.color_entry.get(); self.hr_widget.update_hr_display(hr_value, self.current_hr_color, self.size_slider.get())
+    
     def _check_status_update(self):
-        if is_scanning:
-            self.status_dot.configure(text_color="yellow")
-            self.conn_label.configure(text="正在扫描...")
-        elif is_connected:
-            self.status_dot.configure(text_color="#00FF00")
-            self.conn_label.configure(text="已连接")
-        else:
-            self.status_dot.configure(text_color="red")
-            self.conn_label.configure(text="未连接")
-        
+        if is_scanning: self.status_dot.configure(text_color="yellow"); self.conn_label.configure(text="正在扫描...")
+        elif is_connected: self.status_dot.configure(text_color="#00FF00"); self.conn_label.configure(text="已连接")
+        else: self.status_dot.configure(text_color="red"); self.conn_label.configure(text="未连接")
         self.hr_widget.update_hr_display(hr_value, self.current_hr_color, self.size_slider.get())
         self.after(200, self._check_status_update)
 
     def _start_scan(self):
         global is_scanning
         if is_scanning: return
-        self.device_combo.set("扫描中...")
-        self.scan_button.configure(state="disabled", text="扫描中...")
-        self.connect_button.configure(state="disabled")
-        is_scanning = True
+        self.device_combo.set("扫描中..."); self.scan_button.configure(state="disabled", text="扫描中..."); is_scanning = True
         threading.Thread(target=self._run_ble_loop_for_scan, daemon=True).start()
 
     def _start_connect(self):
@@ -382,122 +346,64 @@ class HRControlApp(ctk.CTk):
         selected_name = self.device_combo.get()
         if selected_name not in self.device_list: return
         current_device_address = self.device_list[selected_name]
-        self.connect_button.configure(state="disabled", text="连接中...")
-        self.scan_button.configure(state="disabled")
+        self.connect_button.configure(state="disabled", text="连接中..."); self.scan_button.configure(state="disabled")
         threading.Thread(target=self._run_ble_loop_for_connect, daemon=True).start()
 
     def _run_ble_loop_for_scan(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(self._scan_devices())
-        loop.close()
+        loop = asyncio.new_event_loop(); asyncio.set_event_loop(loop); loop.run_until_complete(self._scan_devices()); loop.close()
 
     async def _scan_devices(self):
-        global is_scanning
-        self.device_list = {}
+        global is_scanning; self.device_list = {}
         try:
-            target_keyword = "iqoo watch gt" 
             devices = await BleakScanner.discover(timeout=5.0)
             for device in devices:
                 name = device.name or "Unknown"
-                if target_keyword in name.lower():
-                    display_name = f"{name} ({device.address})"
-                    self.device_list[display_name] = device.address
-        except Exception as e:
-            print(f"Scan error: {e}")
-        self.after(0, self._update_scan_results)
-        is_scanning = False
+                if "iqoo" in name.lower() or "watch" in name.lower():
+                    self.device_list[f"{name} ({device.address})"] = device.address
+        except Exception as e: print(f"Scan error: {e}")
+        self.after(0, self._update_scan_results); is_scanning = False
 
     def _update_scan_results(self):
-        device_names = list(self.device_list.keys())
-        self.device_combo.configure(values=device_names, state="normal")
-        if device_names:
-            self.device_combo.set(device_names[0])
-            self.connect_button.configure(state="normal")
-        else:
-            self.device_combo.set("未找到设备")
+        names = list(self.device_list.keys())
+        self.device_combo.configure(values=names, state="normal")
+        if names: self.device_combo.set(names[0]); self.connect_button.configure(state="normal")
+        else: self.device_combo.set("未找到设备")
         self.scan_button.configure(state="normal", text="① 扫描设备")
 
     def _run_ble_loop_for_connect(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        self.ble_loop = loop 
-        self.stop_event = asyncio.Event()
-        try:
-            loop.run_until_complete(self._connect_and_read_hr())
-        finally:
-            loop.close()
-            self.ble_loop = None
+        loop = asyncio.new_event_loop(); asyncio.set_event_loop(loop); self.ble_loop = loop; self.stop_event = asyncio.Event()
+        try: loop.run_until_complete(self._connect_and_read_hr())
+        finally: loop.close(); self.ble_loop = None
 
     async def _handle_hr_data(self, sender, data):
         global hr_value
         flags = data[0]
-        if flags & 0x1:
-            hr_raw = struct.unpack('<H', data[1:3])[0]
-        else:
-            hr_raw = struct.unpack('<B', data[1:2])[0]
-        hr_value = hr_raw
+        hr_value = struct.unpack('<H', data[1:3])[0] if flags & 0x1 else struct.unpack('<B', data[1:2])[0]
 
-    # 关键修复：增加自动重连逻辑，捕获所有 Bleak 错误
     async def _connect_and_read_hr(self):
         global ble_client, is_connected, hr_value
-        
         while not self.stop_event.is_set():
             try:
-                print(f"正在尝试连接 {current_device_address} ...")
+                print(f"Connecting to {current_device_address}...")
                 async with BleakClient(current_device_address) as client:
-                    ble_client = client
-                    is_connected = True
-                    
-                    # 更新 UI
+                    ble_client = client; is_connected = True
                     self.after(0, lambda: self.device_name_label.configure(text=f"设备: {self.device_combo.get()}"))
                     self.after(0, lambda: self.connect_button.configure(text="已连接", state="disabled"))
-                    
                     await client.start_notify(HR_CHAR_UUID, self._handle_hr_data)
-                    
-                    # 保持连接直到收到停止信号
-                    while not self.stop_event.is_set() and client.is_connected:
-                        await asyncio.sleep(1)
-                        
+                    while not self.stop_event.is_set() and client.is_connected: await asyncio.sleep(1)
                     await client.stop_notify(HR_CHAR_UUID)
-            except asyncio.CancelledError:
-                # 正常退出
-                break
+            except asyncio.CancelledError: break
             except Exception as e:
-                # 捕获蓝牙错误（如 WinError -2147023673），打印错误但不崩溃
-                print(f"蓝牙连接断开或错误: {e}")
-                is_connected = False
-                hr_value = 0
+                print(f"Error: {e}"); is_connected = False; hr_value = 0
                 self.after(0, lambda: self.connect_button.configure(text="连接断开，3秒后重试..."))
-                
-                # 等待 3 秒后重试
-                if not self.stop_event.is_set():
-                    await asyncio.sleep(3)
-        
-        # 彻底退出循环后的清理
-        is_connected = False
-        hr_value = 0
-        ble_client = None
-        self.after(0, self._reset_ui_on_disconnect)
-
-    def _reset_ui_on_disconnect(self):
-        self.connect_button.configure(state="normal", text="② 连接选中设备")
-        self.scan_button.configure(state="normal")
-        self.device_name_label.configure(text="设备: 无")
+                if not self.stop_event.is_set(): await asyncio.sleep(3)
+        is_connected = False; hr_value = 0; ble_client = None
+        self.after(0, lambda: [self.connect_button.configure(state="normal", text="② 连接选中设备"), self.scan_button.configure(state="normal"), self.device_name_label.configure(text="设备: 无")])
 
     def _on_closing(self):
-        if self.ble_loop and self.ble_loop.is_running() and self.stop_event:
-            self.ble_loop.call_soon_threadsafe(self.stop_event.set)
-        self.after(100, self._force_exit)
-        
-    def _force_exit(self):
-        self.hr_widget.destroy()
-        self.destroy()
-        sys.exit()
+        if self.ble_loop and self.ble_loop.is_running() and self.stop_event: self.ble_loop.call_soon_threadsafe(self.stop_event.set)
+        self.after(100, lambda: [self.hr_widget.destroy(), self.destroy(), sys.exit()])
 
 if __name__ == "__main__":
-    ctk.set_appearance_mode("Dark")
-    ctk.set_default_color_theme("blue")
-    
-    gui_app = HRControlApp()
-    gui_app.mainloop()
+    ctk.set_appearance_mode("Dark"); ctk.set_default_color_theme("blue")
+    gui_app = HRControlApp(); gui_app.mainloop()
