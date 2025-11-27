@@ -18,7 +18,7 @@ public partial class MainViewModel : ObservableObject
     private int bpm = 0;
 
     [ObservableProperty] 
-    private string status = "READY";
+    private string status = "准备就绪";
 
     [ObservableProperty] 
     private string streamUrl;
@@ -83,10 +83,10 @@ public partial class MainViewModel : ObservableObject
     {
         if (!IsStreaming) 
         { 
-            Status = "INITIALIZING STREAM...";
+            Status = "正在初始化直播...";
             await _stream.StartAsync(); 
             IsStreaming = true; 
-            Status = "LIVESTREAM ONLINE"; 
+            Status = "直播已上线"; 
         }
     }
 }

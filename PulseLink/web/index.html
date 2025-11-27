@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PulseLink Live</title>
+    <title>心率连接 - 实时数据</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -18,11 +18,11 @@
 </head>
 <body>
     <div class="container">
-        <div>LIVE HEART RATE</div>
+        <div>实时心率</div>
         <div id="bpm">--</div>
-        <div>BPM</div>
+        <div>次/分钟</div>
         <canvas id="chart"></canvas>
-        <div id="status" class="status">CONNECTING...</div>
+        <div id="status" class="status">正在连接...</div>
     </div>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -36,7 +36,7 @@
 
         if(userId) {
             const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "Viewer_" + Math.random());
-            client.onConnectionLost = (o) => document.getElementById('status').innerText = "DISCONNECTED";
+            client.onConnectionLost = (o) => document.getElementById('status').innerText = "已断开";
             client.onMessageArrived = (msg) => {
                 const d = JSON.parse(msg.payloadString);
                 const el = document.getElementById('bpm');
@@ -47,10 +47,10 @@
                 chart.data.datasets[0].data.push(d.bpm);
                 chart.data.datasets[0].data.shift();
                 chart.update();
-                document.getElementById('status').innerText = "LIVE SIGNAL ACTIVE";
+                document.getElementById('status').innerText = "信号传输中";
             };
-            client.connect({ onSuccess: () => { client.subscribe(`pulselink/${userId}/data`); document.getElementById('status').innerText = "WAITING FOR DATA..."; }, useSSL: true });
-        } else { document.getElementById('status').innerText = "ERROR: NO USER ID"; }
+            client.connect({ onSuccess: () => { client.subscribe(`pulselink/${userId}/data`); document.getElementById('status').innerText = "等待数据中..."; }, useSSL: true });
+        } else { document.getElementById('status').innerText = "错误：URL中缺少用户ID"; }
     </script>
 </body>
 </html>

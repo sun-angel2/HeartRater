@@ -32,7 +32,7 @@ public class BluetoothService : IBluetoothService
         };
         
         _watcher.Start();
-        StatusChanged?.Invoke("SCANNING...");
+        StatusChanged?.Invoke("正在扫描...");
     }
 
     public async Task ConnectAsync(string deviceId)
@@ -42,14 +42,14 @@ public class BluetoothService : IBluetoothService
             _watcher.Stop();
         }
         
-        StatusChanged?.Invoke("CONNECTING...");
+        StatusChanged?.Invoke("正在连接...");
         
         try
         {
             var device = await BluetoothLEDevice.FromIdAsync(deviceId);
             if (device == null) 
             {
-                StatusChanged?.Invoke("ERROR: DEVICE NOT FOUND");
+                StatusChanged?.Invoke("错误：未找到设备");
                 return;
             }
 
@@ -74,21 +74,21 @@ public class BluetoothService : IBluetoothService
                     };
                     
                     await characteristic.WriteClientCharacteristicConfigurationDescriptorAsync(GattClientCharacteristicConfigurationDescriptorValue.Notify);
-                    StatusChanged?.Invoke("CONNECTED");
+                    StatusChanged?.Invoke("已连接");
                 }
                 else
                 {
-                    StatusChanged?.Invoke("ERROR: NO HR CHARACTERISTIC");
+                    StatusChanged?.Invoke("错误：未找到心率特征");
                 }
             }
             else 
             {
-                StatusChanged?.Invoke("ERROR: PLEASE ENABLE HR BROADCAST ON WATCH");
+                StatusChanged?.Invoke("错误：请在您的心率设备上开启广播");
             }
         }
         catch (Exception ex)
         {
-            StatusChanged?.Invoke($"ERROR: {ex.Message}");
+            StatusChanged?.Invoke($"错误：{ex.Message}");
         }
     }
 }
