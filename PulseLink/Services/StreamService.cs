@@ -18,7 +18,7 @@ public class StreamService
         _userId = Guid.NewGuid().ToString("N").Substring(0, 8); // Generate short random ID
     }
 
-    public string StreamUrl => $"https://your-github-username.github.io/PulseLink/?id={_userId}";
+    public string StreamUrl => $"https://sun-angel2.github.io/HeartRater/PulseLink/web/index.html?id={_userId}";
 
     public async Task StartAsync()
     {
