@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseLink Live</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #0d0d0d; color: #00FF41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { border: 1px solid #00FF41; padding: 20px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 0 15px rgba(0,255,65,0.2); }
+        #bpm { font-size: 80px; font-weight: bold; text-shadow: 0 0 20px #00FF41; margin: 10px 0; }
+        .status { font-size: 12px; color: #555; margin-top: 10px; }
+        .pump { animation: beat 0.5s infinite; }
+        @keyframes beat { 0% { transform: scale(1); } 15% { transform: scale(1.1); } 30% { transform: scale(1); } }
+        canvas { margin-top: 20px; max-height: 100px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>LIVE HEART RATE</div>
+        <div id="bpm">--</div>
+        <div>BPM</div>
+        <canvas id="chart"></canvas>
+        <div id="status" class="status">CONNECTING...</div>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        const ctx = document.getElementById('chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: { labels: Array(20).fill(''), datasets: [{ data: Array(20).fill(null), borderColor: '#00FF41', borderWidth: 1, pointRadius: 0, tension: 0.4 }] },
+            options: { plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { min: 40, max: 180, grid: { color: '#333' } } }, animation: false }
+        });
+
+        if(userId) {
+            const client = new Paho.MQTT.Client("broker.emqx.io", 8083, "Viewer_" + Math.random());
+            client.onConnectionLost = (o) => document.getElementById('status').innerText = "DISCONNECTED";
+            client.onMessageArrived = (msg) => {
+                const d = JSON.parse(msg.payloadString);
+                const el = document.getElementById('bpm');
+                el.innerText = d.bpm;
+                el.style.animationDuration = (60/d.bpm) + "s";
+                el.classList.remove('pump'); void el.offsetWidth; el.classList.add('pump');
+                
+                chart.data.datasets[0].data.push(d.bpm);
+                chart.data.datasets[0].data.shift();
+                chart.update();
+                document.getElementById('status').innerText = "LIVE SIGNAL ACTIVE";
+            };
+            client.connect({ onSuccess: () => { client.subscribe(`pulselink/${userId}/data`); document.getElementById('status').innerText = "WAITING FOR DATA..."; }, useSSL: true });
+        } else { document.getElementById('status').innerText = "ERROR: NO USER ID"; }
+    </script>
+</body>
+</html>
