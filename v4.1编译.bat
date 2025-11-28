@@ -1,0 +1,1 @@
+pyinstaller --noconsole --onefile --collect-all customtkinter --collect-all bleak --collect-all winsdk --hidden-import=winrt.windows.foundation.collections --name "HeartRateMonitor_v4.1" hr.py
